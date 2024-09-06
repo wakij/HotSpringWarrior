@@ -36,14 +36,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9D6F26F22C89FD3600A5B97C /* HotSpringWorrier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWorrier.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D6F27032C89FD3700A5B97C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9D6F27082C89FD3700A5B97C /* HotSpringWorrierTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWorrierTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D6F27082C89FD3700A5B97C /* HotSpringWarriorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWarriorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F270C2C89FD3700A5B97C /* HotSpringWorrierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierTests.swift; sourceTree = "<group>"; };
-		9D6F27122C89FD3700A5B97C /* HotSpringWorrierUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWorrierUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D6F27122C89FD3700A5B97C /* HotSpringWarriorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWarriorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F27162C89FD3700A5B97C /* HotSpringWorrierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierUITests.swift; sourceTree = "<group>"; };
 		9D6F27182C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9D6F273F2C89FE3B00A5B97C /* OpeningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningViewController.swift; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 		9D6F26E92C89FD3600A5B97C = {
 			isa = PBXGroup;
 			children = (
-				9D6F26F42C89FD3600A5B97C /* HotSpringWorrier */,
+				9D6F26F42C89FD3600A5B97C /* HotSpringWarrior */,
 				9D6F270B2C89FD3700A5B97C /* HotSpringWorrierTests */,
 				9D6F27152C89FD3700A5B97C /* HotSpringWorrierUITests */,
 				9D6F26F32C89FD3600A5B97C /* Products */,
@@ -89,14 +89,14 @@
 		9D6F26F32C89FD3600A5B97C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9D6F26F22C89FD3600A5B97C /* HotSpringWorrier.app */,
-				9D6F27082C89FD3700A5B97C /* HotSpringWorrierTests.xctest */,
-				9D6F27122C89FD3700A5B97C /* HotSpringWorrierUITests.xctest */,
+				9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */,
+				9D6F27082C89FD3700A5B97C /* HotSpringWarriorTests.xctest */,
+				9D6F27122C89FD3700A5B97C /* HotSpringWarriorUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9D6F26F42C89FD3600A5B97C /* HotSpringWorrier */ = {
+		9D6F26F42C89FD3600A5B97C /* HotSpringWarrior */ = {
 			isa = PBXGroup;
 			children = (
 				9D6F27412C89FF3E00A5B97C /* View */,
@@ -106,7 +106,7 @@
 				9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */,
 				9D6F27032C89FD3700A5B97C /* Info.plist */,
 			);
-			path = HotSpringWorrier;
+			path = HotSpringWarrior;
 			sourceTree = "<group>";
 		};
 		9D6F270B2C89FD3700A5B97C /* HotSpringWorrierTests */ = {
@@ -146,9 +146,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9D6F26F12C89FD3600A5B97C /* HotSpringWorrier */ = {
+		9D6F26F12C89FD3600A5B97C /* HotSpringWarrior */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9D6F271C2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrier" */;
+			buildConfigurationList = 9D6F271C2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarrior" */;
 			buildPhases = (
 				9D6F26EE2C89FD3600A5B97C /* Sources */,
 				9D6F26EF2C89FD3600A5B97C /* Frameworks */,
@@ -158,14 +158,14 @@
 			);
 			dependencies = (
 			);
-			name = HotSpringWorrier;
+			name = HotSpringWarrior;
 			productName = HotSpringWorrier;
-			productReference = 9D6F26F22C89FD3600A5B97C /* HotSpringWorrier.app */;
+			productReference = 9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9D6F27072C89FD3700A5B97C /* HotSpringWorrierTests */ = {
+		9D6F27072C89FD3700A5B97C /* HotSpringWarriorTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9D6F271F2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrierTests" */;
+			buildConfigurationList = 9D6F271F2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarriorTests" */;
 			buildPhases = (
 				9D6F27042C89FD3700A5B97C /* Sources */,
 				9D6F27052C89FD3700A5B97C /* Frameworks */,
@@ -176,14 +176,14 @@
 			dependencies = (
 				9D6F270A2C89FD3700A5B97C /* PBXTargetDependency */,
 			);
-			name = HotSpringWorrierTests;
+			name = HotSpringWarriorTests;
 			productName = HotSpringWorrierTests;
-			productReference = 9D6F27082C89FD3700A5B97C /* HotSpringWorrierTests.xctest */;
+			productReference = 9D6F27082C89FD3700A5B97C /* HotSpringWarriorTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		9D6F27112C89FD3700A5B97C /* HotSpringWorrierUITests */ = {
+		9D6F27112C89FD3700A5B97C /* HotSpringWarriorUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9D6F27222C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrierUITests" */;
+			buildConfigurationList = 9D6F27222C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarriorUITests" */;
 			buildPhases = (
 				9D6F270E2C89FD3700A5B97C /* Sources */,
 				9D6F270F2C89FD3700A5B97C /* Frameworks */,
@@ -194,9 +194,9 @@
 			dependencies = (
 				9D6F27142C89FD3700A5B97C /* PBXTargetDependency */,
 			);
-			name = HotSpringWorrierUITests;
+			name = HotSpringWarriorUITests;
 			productName = HotSpringWorrierUITests;
-			productReference = 9D6F27122C89FD3700A5B97C /* HotSpringWorrierUITests.xctest */;
+			productReference = 9D6F27122C89FD3700A5B97C /* HotSpringWarriorUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -222,7 +222,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9D6F26ED2C89FD3600A5B97C /* Build configuration list for PBXProject "HotSpringWorrier" */;
+			buildConfigurationList = 9D6F26ED2C89FD3600A5B97C /* Build configuration list for PBXProject "HotSpringWarrior" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -235,9 +235,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9D6F26F12C89FD3600A5B97C /* HotSpringWorrier */,
-				9D6F27072C89FD3700A5B97C /* HotSpringWorrierTests */,
-				9D6F27112C89FD3700A5B97C /* HotSpringWorrierUITests */,
+				9D6F26F12C89FD3600A5B97C /* HotSpringWarrior */,
+				9D6F27072C89FD3700A5B97C /* HotSpringWarriorTests */,
+				9D6F27112C89FD3700A5B97C /* HotSpringWarriorUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -302,12 +302,12 @@
 /* Begin PBXTargetDependency section */
 		9D6F270A2C89FD3700A5B97C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9D6F26F12C89FD3600A5B97C /* HotSpringWorrier */;
+			target = 9D6F26F12C89FD3600A5B97C /* HotSpringWarrior */;
 			targetProxy = 9D6F27092C89FD3700A5B97C /* PBXContainerItemProxy */;
 		};
 		9D6F27142C89FD3700A5B97C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9D6F26F12C89FD3600A5B97C /* HotSpringWorrier */;
+			target = 9D6F26F12C89FD3600A5B97C /* HotSpringWarrior */;
 			targetProxy = 9D6F27132C89FD3700A5B97C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -441,7 +441,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6HZ7Z596PW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HotSpringWorrier/Info.plist;
+				INFOPLIST_FILE = HotSpringWarrior/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -451,7 +451,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "t-wakita.HotSpringWorrier";
+				PRODUCT_BUNDLE_IDENTIFIER = "t-wakita.HotSpringWarrior";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -468,7 +468,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6HZ7Z596PW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HotSpringWorrier/Info.plist;
+				INFOPLIST_FILE = HotSpringWarrior/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -478,7 +478,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "t-wakita.HotSpringWorrier";
+				PRODUCT_BUNDLE_IDENTIFIER = "t-wakita.HotSpringWarrior";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -502,7 +502,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HotSpringWorrier.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HotSpringWorrier";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HotSpringWarrior.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HotSpringWarrior";
 			};
 			name = Debug;
 		};
@@ -522,7 +522,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HotSpringWorrier.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HotSpringWorrier";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HotSpringWarrior.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HotSpringWarrior";
 			};
 			name = Release;
 		};
@@ -565,7 +565,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9D6F26ED2C89FD3600A5B97C /* Build configuration list for PBXProject "HotSpringWorrier" */ = {
+		9D6F26ED2C89FD3600A5B97C /* Build configuration list for PBXProject "HotSpringWarrior" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D6F271A2C89FD3700A5B97C /* Debug */,
@@ -574,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D6F271C2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrier" */ = {
+		9D6F271C2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarrior" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D6F271D2C89FD3700A5B97C /* Debug */,
@@ -583,7 +583,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D6F271F2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrierTests" */ = {
+		9D6F271F2C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarriorTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D6F27202C89FD3700A5B97C /* Debug */,
@@ -592,7 +592,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D6F27222C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWorrierUITests" */ = {
+		9D6F27222C89FD3700A5B97C /* Build configuration list for PBXNativeTarget "HotSpringWarriorUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D6F27232C89FD3700A5B97C /* Debug */,
