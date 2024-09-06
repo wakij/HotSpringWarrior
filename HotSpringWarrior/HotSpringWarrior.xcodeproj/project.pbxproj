@@ -11,8 +11,8 @@
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
 		9D6F270D2C89FD3700A5B97C /* HotSpringWorrierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F270C2C89FD3700A5B97C /* HotSpringWorrierTests.swift */; };
-		9D6F27172C89FD3700A5B97C /* HotSpringWorrierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27162C89FD3700A5B97C /* HotSpringWorrierUITests.swift */; };
-		9D6F27192C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27182C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift */; };
+		9D6F27172C89FD3700A5B97C /* HotSpringWarriorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27162C89FD3700A5B97C /* HotSpringWarriorUITests.swift */; };
+		9D6F27192C89FD3700A5B97C /* HotSpringWarriorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27182C89FD3700A5B97C /* HotSpringWarriorUITestsLaunchTests.swift */; };
 		9D6F27402C89FE3B00A5B97C /* OpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F273F2C89FE3B00A5B97C /* OpeningViewController.swift */; };
 		9D6F27432C8A0D4100A5B97C /* OpeningAnimationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27422C8A0D4100A5B97C /* OpeningAnimationLabel.swift */; };
 		9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27442C8A15AC00A5B97C /* TitleLabel.swift */; };
@@ -44,8 +44,8 @@
 		9D6F27082C89FD3700A5B97C /* HotSpringWarriorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWarriorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F270C2C89FD3700A5B97C /* HotSpringWorrierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierTests.swift; sourceTree = "<group>"; };
 		9D6F27122C89FD3700A5B97C /* HotSpringWarriorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HotSpringWarriorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D6F27162C89FD3700A5B97C /* HotSpringWorrierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierUITests.swift; sourceTree = "<group>"; };
-		9D6F27182C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWorrierUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		9D6F27162C89FD3700A5B97C /* HotSpringWarriorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWarriorUITests.swift; sourceTree = "<group>"; };
+		9D6F27182C89FD3700A5B97C /* HotSpringWarriorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSpringWarriorUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9D6F273F2C89FE3B00A5B97C /* OpeningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningViewController.swift; sourceTree = "<group>"; };
 		9D6F27422C8A0D4100A5B97C /* OpeningAnimationLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningAnimationLabel.swift; sourceTree = "<group>"; };
 		9D6F27442C8A15AC00A5B97C /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				9D6F26F42C89FD3600A5B97C /* HotSpringWarrior */,
-				9D6F270B2C89FD3700A5B97C /* HotSpringWorrierTests */,
-				9D6F27152C89FD3700A5B97C /* HotSpringWorrierUITests */,
+				9D6F270B2C89FD3700A5B97C /* HotSpringWarriorTests */,
+				9D6F27152C89FD3700A5B97C /* HotSpringWarriorUITests */,
 				9D6F26F32C89FD3600A5B97C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,21 +109,21 @@
 			path = HotSpringWarrior;
 			sourceTree = "<group>";
 		};
-		9D6F270B2C89FD3700A5B97C /* HotSpringWorrierTests */ = {
+		9D6F270B2C89FD3700A5B97C /* HotSpringWarriorTests */ = {
 			isa = PBXGroup;
 			children = (
 				9D6F270C2C89FD3700A5B97C /* HotSpringWorrierTests.swift */,
 			);
-			path = HotSpringWorrierTests;
+			path = HotSpringWarriorTests;
 			sourceTree = "<group>";
 		};
-		9D6F27152C89FD3700A5B97C /* HotSpringWorrierUITests */ = {
+		9D6F27152C89FD3700A5B97C /* HotSpringWarriorUITests */ = {
 			isa = PBXGroup;
 			children = (
-				9D6F27162C89FD3700A5B97C /* HotSpringWorrierUITests.swift */,
-				9D6F27182C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift */,
+				9D6F27162C89FD3700A5B97C /* HotSpringWarriorUITests.swift */,
+				9D6F27182C89FD3700A5B97C /* HotSpringWarriorUITestsLaunchTests.swift */,
 			);
-			path = HotSpringWorrierUITests;
+			path = HotSpringWarriorUITests;
 			sourceTree = "<group>";
 		};
 		9D6F27252C89FDB400A5B97C /* ViewController */ = {
@@ -292,8 +292,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D6F27192C89FD3700A5B97C /* HotSpringWorrierUITestsLaunchTests.swift in Sources */,
-				9D6F27172C89FD3700A5B97C /* HotSpringWorrierUITests.swift in Sources */,
+				9D6F27192C89FD3700A5B97C /* HotSpringWarriorUITestsLaunchTests.swift in Sources */,
+				9D6F27172C89FD3700A5B97C /* HotSpringWarriorUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

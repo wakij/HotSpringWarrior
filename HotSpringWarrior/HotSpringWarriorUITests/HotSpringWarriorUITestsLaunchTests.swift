@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class HotSpringWorrierUITestsLaunchTests: XCTestCase {
+final class HotSpringWarriorUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
