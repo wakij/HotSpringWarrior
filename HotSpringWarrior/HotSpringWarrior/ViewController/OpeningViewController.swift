@@ -33,5 +33,14 @@ class OpeningViewController: UIViewController {
         ])
         
         openingLabel.startLabelAnimation()
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(startGame))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc func startGame() {
+        let gameVc = GameViewController()
+        gameVc.modalPresentationStyle = .fullScreen
+        present(gameVc, animated: true)
     }
 }
