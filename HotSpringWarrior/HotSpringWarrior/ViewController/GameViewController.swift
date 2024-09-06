@@ -13,6 +13,16 @@ class GameViewController: UIViewController {
     @ViewLoading var mapView: MKMapView
     @ViewLoading var locationManager: CLLocationManager
     
+    private var userLocations: [CLLocation] = Boundary.sampleUserTrajectory
+    
+    lazy var otaRegion: MKPolygon = {
+        let otaLocData = Boundary.otaRegion
+        let otaRegion = MKPolygon(coordinates: otaLocData.map({ $0.coordinate }), count: otaLocData.count)
+        return otaRegion
+    }()
+    
+    var userTrajectory: MKPolyline?
+    
     override func viewDidLoad() {
         
         setUpLocationManager()
@@ -22,6 +32,8 @@ class GameViewController: UIViewController {
         mapView.delegate = self
         mapView.isRotateEnabled = false
         mapView.isPitchEnabled = false
+        mapView.isScrollEnabled = false
+        mapView.isZoomEnabled = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(mapView)
         
@@ -31,6 +43,15 @@ class GameViewController: UIViewController {
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
         ])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        drawOtaBoundary()
+    }
+    
+    // フォアグラウンドに復帰した時に呼ばれるメソッド
+    @objc func appWillEnterForeground() {
+        updateUserPath()
     }
     
     private func setUpLocationManager() {
@@ -43,6 +64,23 @@ class GameViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
     }
+    
+    private func drawOtaBoundary() {
+        mapView.addOverlay(otaRegion)
+    }
+    
+//    差分更新の方がいいのかなぁ
+//    userLocationsを形状があまり変化しないように間引く処理とかも追加したい
+    private func updateUserPath() {
+        if userLocations.count < 2 { return }
+        //        前の軌跡は消去する
+        if let userTrajectory {
+            mapView.removeOverlay(userTrajectory)
+        }
+        
+        userTrajectory = MKPolyline(coordinates: userLocations.map({ $0.coordinate }), count: userLocations.count)
+        mapView.addOverlay(userTrajectory!)
+    }
 }
 
 extension GameViewController: MKMapViewDelegate {
@@ -54,6 +92,17 @@ extension GameViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let polygon = overlay as? MKPolygon {
+            let polygonRenderer = MKPolygonRenderer(overlay: polygon)
+            polygonRenderer.fillColor = UIColor.black
+            return polygonRenderer
+        }
+        
+        if let polyline = overlay as? MKPolyline {
+            let polylineRenderer = ErasePolylineRenderer(polyline: polyline)
+            return polylineRenderer
+        }
+        
         fatalError()
     }
 }
@@ -75,8 +124,14 @@ extension GameViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.last else { return }
-        let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
-        mapView.setRegion(cr, animated: true)
+//        guard let loc = locations.last else { return }
+//        userLocations.append(loc)
+//        
+////        UIの更新はフォアグラウンドにいる時に限定する
+//        if UIApplication.shared.applicationState == .active {
+//            updateUserPath()
+//            let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+//            mapView.setRegion(cr, animated: true)
+//        }
     }
 }
