@@ -13,15 +13,10 @@ class GameViewController: UIViewController {
     @ViewLoading var mapView: MKMapView
     @ViewLoading var locationManager: CLLocationManager
     
-    private var userLocations: [CLLocation] = Boundary.sampleUserTrajectory
+    let eventArea: Area = OtaArea()
     
-    lazy var otaRegion: MKPolygon = {
-        let otaLocData = Boundary.otaRegion
-        let otaRegion = MKPolygon(coordinates: otaLocData.map({ $0.coordinate }), count: otaLocData.count)
-        return otaRegion
-    }()
-    
-    var userTrajectory: MKPolyline?
+    private var userTrajectory: [CLLocation] = []
+    var userTrajectoryLine: MKPolyline?
     
     override func viewDidLoad() {
         
@@ -45,8 +40,7 @@ class GameViewController: UIViewController {
         ])
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        
-        drawOtaBoundary()
+        drawEventArea()
     }
     
     // フォアグラウンドに復帰した時に呼ばれるメソッド
@@ -65,21 +59,23 @@ class GameViewController: UIViewController {
         locationManager.delegate = self
     }
     
-    private func drawOtaBoundary() {
-        mapView.addOverlay(otaRegion)
+    private func drawEventArea() {
+        let boundary = eventArea.boundary
+        let boundaryPolygon = MKPolygon(coordinates: boundary.map({ $0.coordinate }), count: boundary.count)
+        mapView.addOverlay(boundaryPolygon)
     }
     
 //    差分更新の方がいいのかなぁ
 //    userLocationsを形状があまり変化しないように間引く処理とかも追加したい
     private func updateUserPath() {
-        if userLocations.count < 2 { return }
+        if userTrajectory.count < 2 { return }
         //        前の軌跡は消去する
-        if let userTrajectory {
-            mapView.removeOverlay(userTrajectory)
+        if let userTrajectoryLine {
+            mapView.removeOverlay(userTrajectoryLine)
         }
         
-        userTrajectory = MKPolyline(coordinates: userLocations.map({ $0.coordinate }), count: userLocations.count)
-        mapView.addOverlay(userTrajectory!)
+        userTrajectoryLine = MKPolyline(coordinates: userTrajectory.map({ $0.coordinate }), count: userTrajectory.count)
+        mapView.addOverlay(userTrajectoryLine!)
     }
 }
 
