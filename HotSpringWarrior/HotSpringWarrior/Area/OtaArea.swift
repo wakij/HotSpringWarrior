@@ -10,7 +10,7 @@ struct OtaArea: Area {
     var name: String = "大田区"
     
     var boundary: [CLLocation] = {
-        if let filePath = Bundle.main.path(forResource: "otaRegion", ofType: "txt") {
+        if let filePath = Bundle.main.path(forResource: "otaArea", ofType: "txt") {
             do {
                 let fileContents = try String(contentsOfFile: filePath, encoding: .utf8)
                 return AreaCSVLoader.loadCSV(data: fileContents)
