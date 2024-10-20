@@ -11,3 +11,10 @@ protocol Area {
     var name: String { get }
     var boundary: [CLLocation] { get }
 }
+
+extension Area {
+    var boundingRect: MKMapRect {
+        let boundaryPolygon = MKPolygon(coordinates: boundary.map({ $0.coordinate }), count: boundary.count)
+        return boundaryPolygon.boundingMapRect
+    }
+}

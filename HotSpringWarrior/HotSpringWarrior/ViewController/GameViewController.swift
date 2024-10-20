@@ -25,10 +25,13 @@ class GameViewController: UIViewController {
         mapView = MKMapView(frame: .zero)
         mapView.showsUserLocation = true
         mapView.delegate = self
-        mapView.isRotateEnabled = false
-        mapView.isPitchEnabled = false
-        mapView.isScrollEnabled = false
-        mapView.isZoomEnabled = false
+        mapView.setRegion(.init(eventArea.boundingRect), animated: true)
+        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
+//        200は適当に付けてるだけ
+//        widthやheightをmaxCenterCoordinateDistanceに設定するとAreaもう一個分だけ移動できるようになる.
+//        今回はそこまで移動できても意味がないので半分だけ余白を持たせている。
+        mapView.setCameraZoomRange(.init(minCenterCoordinateDistance: 200,maxCenterCoordinateDistance: min(eventArea.boundingRect.width, eventArea.boundingRect.height)*0.5), animated: true)
+        mapView.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
         mapView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(mapView)
         
