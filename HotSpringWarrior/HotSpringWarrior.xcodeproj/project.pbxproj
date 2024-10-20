@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		341A8EF62CC52A1B0040C3CA /* Opening.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A8EF52CC52A160040C3CA /* Opening.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		341A8EF52CC52A160040C3CA /* Opening.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Opening.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +89,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		341A8EF42CC529FF0040C3CA /* Constant */ = {
+			isa = PBXGroup;
+			children = (
+				341A8EF52CC52A160040C3CA /* Opening.swift */,
+			);
+			path = Constant;
+			sourceTree = "<group>";
+		};
 		9D6F26E92C89FD3600A5B97C = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +121,7 @@
 		9D6F26F42C89FD3600A5B97C /* HotSpringWarrior */ = {
 			isa = PBXGroup;
 			children = (
+				341A8EF42CC529FF0040C3CA /* Constant */,
 				9D6F27572C8B297A00A5B97C /* Renderer */,
 				9D6F274E2C8AD1A200A5B97C /* RegionBoundryData */,
 				9D6F274B2C8A890100A5B97C /* Ex */,
@@ -324,6 +335,7 @@
 			files = (
 				9D6F27592C8B29A400A5B97C /* ErasePolylineRenderer.swift in Sources */,
 				9D6F27402C89FE3B00A5B97C /* OpeningViewController.swift in Sources */,
+				341A8EF62CC52A1B0040C3CA /* Opening.swift in Sources */,
 				9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */,
 				9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */,
 				9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */,

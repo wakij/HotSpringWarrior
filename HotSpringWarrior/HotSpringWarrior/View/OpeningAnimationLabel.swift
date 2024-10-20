@@ -20,7 +20,7 @@ final class OpeningAnimationLabel: UILabel {
     private var typingTimer: Timer?
     private var currentIndex: Int = 0
 
-    private let displayText: String = "悪の組織により私たちの大田区が\n汚されてしまった...\n矢口 渡とともに銭湯のお湯で\n汚れを洗い流していこう!!!"
+    private let displayText: String = Opening.description
     private var displayingText = ""
     
     private let explainTextAttributes = [
@@ -59,7 +59,7 @@ final class OpeningAnimationLabel: UILabel {
     }
     
     private func startTapToStart() {
-        self.attributedText = NSAttributedString(string: "tap to start", attributes: tapToStartTextAttributes)
+        self.attributedText = NSAttributedString(string: Opening.tapToStart, attributes: tapToStartTextAttributes)
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.duration = 1.0
         animation.fromValue = UIColor.black.cgColor
