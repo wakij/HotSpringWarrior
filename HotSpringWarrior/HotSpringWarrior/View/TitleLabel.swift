@@ -20,7 +20,7 @@ final class TitleLabel: UILabel {
         super.init(frame: frame)
         self.numberOfLines = 2
         self.textAlignment = .center
-        self.attributedText = NSAttributedString(string: "湯闘士\n〜矢口渡〜", attributes: titleTextAttributes)
+        self.attributedText = NSAttributedString(string: Opening.title, attributes: titleTextAttributes)
     }
     
     required init?(coder: NSCoder) {
