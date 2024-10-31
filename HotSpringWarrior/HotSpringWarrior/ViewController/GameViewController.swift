@@ -19,50 +19,20 @@ class GameViewController: UIViewController {
     private var userTrajectory: [CLLocation] = []
     var userTrajectoryLine: MKPolyline?
     
-    private var qrReader: QRReader = .init()
-    var qrReaderView: UIView?
+    private lazy var qrReader: QRReader = .init()
+    var qrScanningView: UIView?
     
     override func viewDidLoad() {
         
         setUpLocationManager()
-        
-        mapView = MKMapView(frame: .zero)
-        mapView.showsUserLocation = true
-        mapView.delegate = self
-        mapView.setRegion(.init(eventArea.boundingRect), animated: true)
-        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
-//        200は適当に付けてるだけ
-//        widthやheightをmaxCenterCoordinateDistanceに設定するとAreaもう一個分だけ移動できるようになる.
-//        今回はそこまで移動できても意味がないので半分だけ余白を持たせている。
-        mapView.setCameraZoomRange(.init(minCenterCoordinateDistance: 200,maxCenterCoordinateDistance: min(eventArea.boundingRect.width, eventArea.boundingRect.height)*0.5), animated: true)
-        mapView.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(mapView)
-        
 //        QRコードリーダー
         qrReader.delegate = self
         
-        let qrCodeReaderView = UIImageView(image: UIImage(systemName: "qrcode.viewfinder"))
-        qrCodeReaderView.isUserInteractionEnabled = true
-        qrCodeReaderView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(qrCodeReaderView)
-        
-        let qrCodeReaderViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(startQRRead))
-        qrCodeReaderView.addGestureRecognizer(qrCodeReaderViewTapGestureRecognizer)
-        
-        NSLayoutConstraint.activate([
-            mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            qrCodeReaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            qrCodeReaderView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20),
-            qrCodeReaderView.widthAnchor.constraint(equalToConstant: 60),
-            qrCodeReaderView.heightAnchor.constraint(equalToConstant: 60),
-        ])
+//        Viewの設定
+        setUpMapView()
+        setUpQRReaderLauncherView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        drawEventArea()
     }
     
     // フォアグラウンドに復帰した時に呼ばれるメソッド
@@ -100,26 +70,67 @@ class GameViewController: UIViewController {
         mapView.addOverlay(userTrajectoryLine!)
     }
     
-    @objc func startQRRead() {
-        qrReader.start()
-        qrReaderView = .init(frame: self.view.frame)
-        qrReaderView?.backgroundColor = .clear
+    private func setUpMapView() {
+        mapView = MKMapView(frame: .zero)
+        mapView.showsUserLocation = true
+        mapView.delegate = self
+        mapView.setRegion(.init(eventArea.boundingRect), animated: true)
+        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
+//        200は適当に付けてるだけ
+//        widthやheightをmaxCenterCoordinateDistanceに設定するとAreaもう一個分だけ移動できるようになる.
+//        今回はそこまで移動できても意味がないので半分だけ余白を持たせている。
+        mapView.setCameraZoomRange(.init(minCenterCoordinateDistance: 200,maxCenterCoordinateDistance: min(eventArea.boundingRect.width, eventArea.boundingRect.height)*0.5), animated: true)
+        mapView.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(mapView)
         
-        let layer = AVCaptureVideoPreviewLayer(session: qrReader.session)
-        layer.frame = qrReaderView!.bounds
-        layer.videoGravity = .resizeAspectFill
-        layer.connection?.videoRotationAngle = .zero
+        NSLayoutConstraint.activate([
+            mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        ])
         
-        qrReaderView?.layer.addSublayer(layer)
-        self.view.addSubview(qrReaderView!)
+        drawEventArea()
     }
     
-    func stopQRRead() {
+    private func setUpQRReaderLauncherView() {
+        let qrCodeImageView = UIImageView(image: UIImage(systemName: "qrcode.viewfinder"))
+        qrCodeImageView.isUserInteractionEnabled = true
+        qrCodeImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(qrCodeImageView)
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(startQRReader))
+        qrCodeImageView.addGestureRecognizer(tapGestureRecognizer)
+        
+        NSLayoutConstraint.activate([
+            qrCodeImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            qrCodeImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20),
+            qrCodeImageView.widthAnchor.constraint(equalToConstant: 60),
+            qrCodeImageView.heightAnchor.constraint(equalToConstant: 60),
+        ])
+    }
+    
+    @objc func startQRReader() {
+        qrReader.start()
+        qrScanningView = .init(frame: self.view.frame)
+        qrScanningView?.backgroundColor = .clear
+        
+        let previewLayer = AVCaptureVideoPreviewLayer(session: qrReader.session)
+        previewLayer.frame = qrScanningView!.bounds
+        previewLayer.videoGravity = .resizeAspectFill
+        previewLayer.connection?.videoRotationAngle = .zero
+        
+        qrScanningView?.layer.addSublayer(previewLayer)
+        self.view.addSubview(qrScanningView!)
+    }
+    
+    func stopQRReader() {
         qrReader.stop()
         
         DispatchQueue.main.async {
-            self.qrReaderView?.removeFromSuperview()
-            self.qrReaderView = nil
+            self.qrScanningView?.removeFromSuperview()
+            self.qrScanningView = nil
         }
     }
 }
@@ -180,6 +191,6 @@ extension GameViewController: CLLocationManagerDelegate {
 extension GameViewController: QRReaderDelegate {
     func didRead(_ text: String) {
         print(text)
-        stopQRRead()
+        stopQRReader()
     }
 }
