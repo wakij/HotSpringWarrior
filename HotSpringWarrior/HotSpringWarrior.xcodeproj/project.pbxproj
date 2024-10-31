@@ -11,6 +11,7 @@
 		341A8EFB2CC52D0E0040C3CA /* OtaArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A8EFA2CC52CFD0040C3CA /* OtaArea.swift */; };
 		341A8EFD2CC52D180040C3CA /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A8EFC2CC52D140040C3CA /* Area.swift */; };
 		341A8EFF2CC52EF10040C3CA /* AreaCSVLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A8EFE2CC52EDC0040C3CA /* AreaCSVLoader.swift */; };
+		341A91EE2CD353270040C3CA /* QRReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A91ED2CD353200040C3CA /* QRReader.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		341A8EFA2CC52CFD0040C3CA /* OtaArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtaArea.swift; sourceTree = "<group>"; };
 		341A8EFC2CC52D140040C3CA /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
 		341A8EFE2CC52EDC0040C3CA /* AreaCSVLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaCSVLoader.swift; sourceTree = "<group>"; };
+		341A91ED2CD353200040C3CA /* QRReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReader.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -120,6 +122,14 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		341A91EC2CD3531A0040C3CA /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				341A91ED2CD353200040C3CA /* QRReader.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		9D6F26E92C89FD3600A5B97C = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +154,7 @@
 		9D6F26F42C89FD3600A5B97C /* HotSpringWarrior */ = {
 			isa = PBXGroup;
 			children = (
+				341A91EC2CD3531A0040C3CA /* Util */,
 				341A8EF92CC52CE30040C3CA /* Area */,
 				341A8EF42CC529FF0040C3CA /* Constant */,
 				9D6F27572C8B297A00A5B97C /* Renderer */,
@@ -348,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D6F27592C8B29A400A5B97C /* ErasePolylineRenderer.swift in Sources */,
+				341A91EE2CD353270040C3CA /* QRReader.swift in Sources */,
 				341A8EFD2CC52D180040C3CA /* Area.swift in Sources */,
 				9D6F27402C89FE3B00A5B97C /* OpeningViewController.swift in Sources */,
 				341A8EF62CC52A1B0040C3CA /* Opening.swift in Sources */,
@@ -524,6 +536,7 @@
 				DEVELOPMENT_TEAM = F6JNWD6HR5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HotSpringWarrior/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "QRコードを読み取るために使用";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "位置情報を元にゲームを行うのに必要です。";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "位置情報を元にゲームを行うのに必要です。";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "このアプリは位置情報が必要です。";
@@ -554,6 +567,7 @@
 				DEVELOPMENT_TEAM = F6JNWD6HR5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HotSpringWarrior/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "QRコードを読み取るために使用";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "位置情報を元にゲームを行うのに必要です。";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "位置情報を元にゲームを行うのに必要です。";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "このアプリは位置情報が必要です。";
