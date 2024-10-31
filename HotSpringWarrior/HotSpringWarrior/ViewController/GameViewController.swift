@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import MapKit
+import AVFoundation
 
 class GameViewController: UIViewController {
     @ViewLoading var mapView: MKMapView
@@ -17,6 +18,9 @@ class GameViewController: UIViewController {
     
     private var userTrajectory: [CLLocation] = []
     var userTrajectoryLine: MKPolyline?
+    
+    private var qrReader: QRReader = .init()
+    var qrReaderView: UIView?
     
     override func viewDidLoad() {
         
@@ -35,11 +39,26 @@ class GameViewController: UIViewController {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(mapView)
         
+//        QRコードリーダー
+        qrReader.delegate = self
+        
+        let qrCodeReaderView = UIImageView(image: UIImage(systemName: "qrcode.viewfinder"))
+        qrCodeReaderView.isUserInteractionEnabled = true
+        qrCodeReaderView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(qrCodeReaderView)
+        
+        let qrCodeReaderViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(startQRRead))
+        qrCodeReaderView.addGestureRecognizer(qrCodeReaderViewTapGestureRecognizer)
+        
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
             mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
+            mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            qrCodeReaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            qrCodeReaderView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20),
+            qrCodeReaderView.widthAnchor.constraint(equalToConstant: 60),
+            qrCodeReaderView.heightAnchor.constraint(equalToConstant: 60),
         ])
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -79,6 +98,29 @@ class GameViewController: UIViewController {
         
         userTrajectoryLine = MKPolyline(coordinates: userTrajectory.map({ $0.coordinate }), count: userTrajectory.count)
         mapView.addOverlay(userTrajectoryLine!)
+    }
+    
+    @objc func startQRRead() {
+        qrReader.start()
+        qrReaderView = .init(frame: self.view.frame)
+        qrReaderView?.backgroundColor = .clear
+        
+        let layer = AVCaptureVideoPreviewLayer(session: qrReader.session)
+        layer.frame = qrReaderView!.bounds
+        layer.videoGravity = .resizeAspectFill
+        layer.connection?.videoRotationAngle = .zero
+        
+        qrReaderView?.layer.addSublayer(layer)
+        self.view.addSubview(qrReaderView!)
+    }
+    
+    func stopQRRead() {
+        qrReader.stop()
+        
+        DispatchQueue.main.async {
+            self.qrReaderView?.removeFromSuperview()
+            self.qrReaderView = nil
+        }
     }
 }
 
@@ -132,5 +174,12 @@ extension GameViewController: CLLocationManagerDelegate {
 //            let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
 //            mapView.setRegion(cr, animated: true)
 //        }
+    }
+}
+
+extension GameViewController: QRReaderDelegate {
+    func didRead(_ text: String) {
+        print(text)
+        stopQRRead()
     }
 }
