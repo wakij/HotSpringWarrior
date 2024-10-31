@@ -20,7 +20,9 @@ class GameViewController: UIViewController {
     var userTrajectoryLine: MKPolyline?
     
     private lazy var qrReader: QRReader = .init()
-    var qrScanningView: UIView?
+    private var qrScanningView: UIView?
+    
+    private var userView: UserView!
     
     override func viewDidLoad() {
         
@@ -31,6 +33,7 @@ class GameViewController: UIViewController {
 //        Viewの設定
         setUpMapView()
         setUpQRReaderLauncherView()
+        setUpUserView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -109,6 +112,11 @@ class GameViewController: UIViewController {
             qrCodeImageView.widthAnchor.constraint(equalToConstant: 60),
             qrCodeImageView.heightAnchor.constraint(equalToConstant: 60),
         ])
+    }
+    
+    private func setUpUserView() {
+        userView = .init(center: self.view.center)
+        self.mapView.addSubview(userView)
     }
     
     @objc func startQRReader() {
@@ -192,5 +200,13 @@ extension GameViewController: QRReaderDelegate {
     func didRead(_ text: String) {
         print(text)
         stopQRReader()
+        
+//       実際はゲームの状態によって分岐する
+//        今は例としてお湯を手に入れたとする
+        DispatchQueue.main.async {
+            self.userView.holdHotWater {
+                print("お湯を手に入れた！")
+            }
+        }
     }
 }
