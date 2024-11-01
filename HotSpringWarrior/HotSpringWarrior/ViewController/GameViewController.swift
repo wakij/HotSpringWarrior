@@ -65,7 +65,7 @@ class GameViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.delegate = self
         mapView.setRegion(.init(eventArea.boundingRect), animated: true)
-        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
+//        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
 ////        200は適当に付けてるだけ
 ////        widthやheightをmaxCenterCoordinateDistanceに設定するとAreaもう一個分だけ移動できるようになる.
 ////        今回はそこまで移動できても意味がないので半分だけ余白を持たせている。
@@ -158,6 +158,12 @@ extension GameViewController: QRReaderDelegate {
         
 //       実際はゲームの状態によって分岐する
 //        今は例としてお湯を手に入れたとする
+        DispatchQueue.main.async {
+            guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
+            userView.holdHotWater {
+                print("お湯を手に入れた！！！")
+            }
+        }
     }
 }
 

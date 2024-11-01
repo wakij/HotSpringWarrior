@@ -29,17 +29,17 @@ final class UserView: MKAnnotationView {
     
     func holdHotWater(completion: @escaping () -> Void) {
         let maskLayer = CALayer()
-        maskLayer.frame = self.bounds
-        self.layer.mask = maskLayer
+        maskLayer.frame = self.imageView.bounds
+        self.imageView.layer.mask = maskLayer
         let anim = HoldHotWaterAnimation(
-            fromValue: self.bounds,
-            toValue: CGRect(x: 0, y: 0, width: self.bounds.width, height: 0)) {
+            fromValue: self.imageView.bounds,
+            toValue: CGRect(x: 0, y: 0, width: self.imageView.bounds.width, height: 0)) {
                 completion()
             }
         anim.start(on: maskLayer)
     }
 
-    func startWalkingAnimation() {
+    private func startWalkingAnimation() {
         self.imageView.animationImages = [
             UIImage(named: "yaguchiFront")!,
             UIImage(named: "yaguchiLeft")!,
@@ -50,7 +50,7 @@ final class UserView: MKAnnotationView {
         self.imageView.startAnimating()
     }
 
-    func stopWalkingAnimation() {
+    private func stopWalkingAnimation() {
         self.imageView.animationImages = nil
         self.imageView.stopAnimating()
     }
