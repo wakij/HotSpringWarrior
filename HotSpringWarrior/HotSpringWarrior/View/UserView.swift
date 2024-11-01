@@ -5,16 +5,25 @@
 //  Created by wakita tomoshige on 2024/10/31.
 //
 import UIKit
+import MapKit
 
-final class UserView: UIImageView {
-    init(center: CGPoint) {
-        super.init(frame: .zero)
-        self.image = UIImage(named: "yaguchiNormal")
-        self.bounds.size = CGSize(width: 100, height: 100)
-        self.center = center
+final class UserView: MKAnnotationView {
+    let imageView: UIImageView
+    override init(annotation: (any MKAnnotation)?, reuseIdentifier: String?) {
+        self.imageView = UIImageView(image: UIImage(named: "yaguchiNormal"))
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        self.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.imageView.widthAnchor.constraint(equalToConstant: .init(60)),
+            self.imageView.heightAnchor.constraint(equalToConstant: .init(60))
+        ])
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -29,20 +38,20 @@ final class UserView: UIImageView {
             }
         anim.start(on: maskLayer)
     }
-    
+
     func startWalkingAnimation() {
-        self.animationImages = [
+        self.imageView.animationImages = [
             UIImage(named: "yaguchiFront")!,
             UIImage(named: "yaguchiLeft")!,
             UIImage(named: "yaguchiRight")!
         ]
-        self.animationDuration = 1.0
-        self.animationRepeatCount = 0
-        self.startAnimating()
+        self.imageView.animationDuration = 1.0
+        self.imageView.animationRepeatCount = 0
+        self.imageView.startAnimating()
     }
-    
+
     func stopWalkingAnimation() {
-        self.animationImages = nil
-        self.stopAnimating()
+        self.imageView.animationImages = nil
+        self.imageView.stopAnimating()
     }
 }
