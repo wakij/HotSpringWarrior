@@ -32,7 +32,7 @@ class OpeningViewController: UIViewController {
             openingLabel.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.5),
         ])
         
-        openingLabel.startLabelAnimation()
+        openingLabel.startAnimating()
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(startGame))
         self.view.addGestureRecognizer(tapGestureRecognizer)
