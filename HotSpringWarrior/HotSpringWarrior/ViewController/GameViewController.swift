@@ -22,6 +22,8 @@ class GameViewController: UIViewController {
     private var qrReader: QRReader = .init()
     private var qrScanningView: UIView?
     
+    @ViewLoading private var noticeLabel: NoticeLabel
+    
     override func viewDidLoad() {
         
         locationService.startUpdatingLocation()
@@ -31,6 +33,7 @@ class GameViewController: UIViewController {
         
 //        Viewの設定
         setUpMapView()
+        setUpNoticeLabel()
         setUpQRReaderLauncherView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -83,6 +86,18 @@ class GameViewController: UIViewController {
         ])
         
         drawEventArea()
+    }
+    
+    private func setUpNoticeLabel() {
+        self.noticeLabel = NoticeLabel(frame: .zero)
+        noticeLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.mapView.addSubview(noticeLabel)
+        
+        NSLayoutConstraint.activate([
+            noticeLabel.centerXAnchor.constraint(equalTo: self.mapView.centerXAnchor),
+            noticeLabel.topAnchor.constraint(equalTo: self.mapView.topAnchor, constant: 100),
+            noticeLabel.widthAnchor.constraint(equalTo: self.mapView.widthAnchor, multiplier: 0.8)
+        ])
     }
     
     private func setUpQRReaderLauncherView() {
@@ -161,7 +176,8 @@ extension GameViewController: QRReaderDelegate {
         DispatchQueue.main.async {
             guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
             userView.holdHotWater {
-                print("お湯を手に入れた！！！")
+                self.noticeLabel.show(text: Game.getHotWater)
+                userView.startWalkingAnimation()
             }
         }
     }

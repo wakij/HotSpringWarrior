@@ -18,6 +18,11 @@
 		341A92012CD3C3CF0040C3CA /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92002CD3C3C50040C3CA /* LocationService.swift */; };
 		341A92032CD3C53E0040C3CA /* RealLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92022CD3C5360040C3CA /* RealLocationService.swift */; };
 		341A92052CD3C9440040C3CA /* MockLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92042CD3C9270040C3CA /* MockLocationService.swift */; };
+		341A92102CD5C47C0040C3CA /* NoticeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A920F2CD5C3E50040C3CA /* NoticeLabel.swift */; };
+		341A92122CD5CF740040C3CA /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92112CD5CF6B0040C3CA /* Game.swift */; };
+		341A921A2CD5F7950040C3CA /* TextAnimationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */; };
+		341A921C2CD5F7FE0040C3CA /* TypingTextAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */; };
+		341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -62,6 +67,11 @@
 		341A92002CD3C3C50040C3CA /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		341A92022CD3C5360040C3CA /* RealLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealLocationService.swift; sourceTree = "<group>"; };
 		341A92042CD3C9270040C3CA /* MockLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocationService.swift; sourceTree = "<group>"; };
+		341A920F2CD5C3E50040C3CA /* NoticeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeLabel.swift; sourceTree = "<group>"; };
+		341A92112CD5CF6B0040C3CA /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnimationStrategy.swift; sourceTree = "<group>"; };
+		341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingTextAnimation.swift; sourceTree = "<group>"; };
+		341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkingTextAnimation.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +120,7 @@
 		341A8EF42CC529FF0040C3CA /* Constant */ = {
 			isa = PBXGroup;
 			children = (
+				341A92112CD5CF6B0040C3CA /* Game.swift */,
 				341A8EF52CC52A160040C3CA /* Opening.swift */,
 			);
 			path = Constant;
@@ -223,6 +234,10 @@
 		9D6F27412C89FF3E00A5B97C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */,
+				341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */,
+				341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */,
+				341A920F2CD5C3E50040C3CA /* NoticeLabel.swift */,
 				341A91EF2CD3A00F0040C3CA /* UserView.swift */,
 				9D6F27422C8A0D4100A5B97C /* OpeningAnimationLabel.swift */,
 				9D6F27442C8A15AC00A5B97C /* TitleLabel.swift */,
@@ -387,11 +402,14 @@
 				9D6F27592C8B29A400A5B97C /* ErasePolylineRenderer.swift in Sources */,
 				341A91EE2CD353270040C3CA /* QRReader.swift in Sources */,
 				341A8EFD2CC52D180040C3CA /* Area.swift in Sources */,
+				341A921C2CD5F7FE0040C3CA /* TypingTextAnimation.swift in Sources */,
 				9D6F27402C89FE3B00A5B97C /* OpeningViewController.swift in Sources */,
 				341A8EF62CC52A1B0040C3CA /* Opening.swift in Sources */,
 				341A92052CD3C9440040C3CA /* MockLocationService.swift in Sources */,
+				341A92102CD5C47C0040C3CA /* NoticeLabel.swift in Sources */,
 				341A8EFF2CC52EF10040C3CA /* AreaCSVLoader.swift in Sources */,
 				9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */,
+				341A921A2CD5F7950040C3CA /* TextAnimationStrategy.swift in Sources */,
 				341A8EFB2CC52D0E0040C3CA /* OtaArea.swift in Sources */,
 				9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */,
 				9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */,
@@ -400,6 +418,8 @@
 				341A91F52CD3AAA30040C3CA /* Animation.swift in Sources */,
 				341A92032CD3C53E0040C3CA /* RealLocationService.swift in Sources */,
 				9D6F27432C8A0D4100A5B97C /* OpeningAnimationLabel.swift in Sources */,
+				341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */,
+				341A92122CD5CF740040C3CA /* Game.swift in Sources */,
 				341A91F72CD3AEC90040C3CA /* HoldHotWaterAnimation.swift in Sources */,
 				341A92012CD3C3CF0040C3CA /* LocationService.swift in Sources */,
 				341A91F02CD3A0140040C3CA /* UserView.swift in Sources */,

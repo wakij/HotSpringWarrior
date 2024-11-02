@@ -8,24 +8,11 @@
 import Foundation
 import UIKit
 
-//使いまわしたいけど挙動が特殊すぎる
 final class OpeningAnimationLabel: UILabel {
-
-    // タイピングの速度
-    private var typingSpeed: TimeInterval = 0.1
-    
-    // テキストが全て表示された後に消すまでの待ち時間
     private var clearingDelay: TimeInterval = 2.0
-
-    private var typingTimer: Timer?
-    private var currentIndex: Int = 0
-
-    private let displayText: String = Opening.description
-    private var displayingText = ""
+    private var textAnimation: TextAnimationStrategy?
     
     private let explainTextAttributes = [
-//        .strokeColor : UIColor.black,
-//        .strokeWidth : -5.0,
         .foregroundColor: UIColor.white,
         .font : UIFont.boldSystemFont(ofSize: 22.0)
         ] as [NSAttributedString.Key : Any]
@@ -35,38 +22,20 @@ final class OpeningAnimationLabel: UILabel {
         .font : UIFont.boldSystemFont(ofSize: 30.0)
     ] as [NSAttributedString.Key : Any]
     
-    func startLabelAnimation() {
-        self.attributedText = nil
-        currentIndex = 0
-        typingTimer?.invalidate()
-        
-        typingTimer = Timer.scheduledTimer(withTimeInterval: typingSpeed, repeats: true) { [weak self] timer in
-            guard let self = self else { return }
-            if self.currentIndex < displayText.count {
-                let index = displayText.index(displayText.startIndex, offsetBy: self.currentIndex)
-                self.displayingText.append(displayText[index])
-                self.attributedText = NSAttributedString(string: displayingText, attributes: explainTextAttributes)
-                self.currentIndex += 1
-            } else {
-                // 全てのテキストを表示したらタイマーを停止して一定時間後にクリア
-                timer.invalidate()
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.clearingDelay) {
-                    self.attributedText = nil
-                    self.startTapToStart()
-                }
+    func startAnimating() {
+        let textAnimation = TypingTextAnimation(text: Opening.description, attributes: explainTextAttributes)
+        self.textAnimation = textAnimation
+        textAnimation.animate(label: self, completion: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.clearingDelay) {
+                self.attributedText = nil
+                self.startTapToStart()
             }
-        }
+        })
     }
     
     private func startTapToStart() {
-        self.attributedText = NSAttributedString(string: Opening.tapToStart, attributes: tapToStartTextAttributes)
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.duration = 1.0
-        animation.fromValue = UIColor.black.cgColor
-        animation.toValue = UIColor.red.cgColor
-        animation.autoreverses = true
-        animation.repeatCount = 2
-        animation.isRemovedOnCompletion = true
-        self.layer.add(animation, forKey: nil)
+        let textAnimation = BlinkingTextAnimation(text: Opening.tapToStart, attributes: tapToStartTextAttributes)
+        self.textAnimation = textAnimation
+        textAnimation.animate(label: self, completion: {})
     }
 }

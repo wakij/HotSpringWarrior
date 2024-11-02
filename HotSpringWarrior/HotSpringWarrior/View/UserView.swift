@@ -34,12 +34,13 @@ final class UserView: MKAnnotationView {
         let anim = HoldHotWaterAnimation(
             fromValue: self.imageView.bounds,
             toValue: CGRect(x: 0, y: 0, width: self.imageView.bounds.width, height: 0)) {
+                self.imageView.layer.mask = nil
                 completion()
             }
         anim.start(on: maskLayer)
     }
 
-    private func startWalkingAnimation() {
+    func startWalkingAnimation() {
         self.imageView.animationImages = [
             UIImage(named: "yaguchiFront")!,
             UIImage(named: "yaguchiLeft")!,
