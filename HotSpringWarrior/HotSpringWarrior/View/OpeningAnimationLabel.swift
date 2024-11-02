@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 
-final class OpeningAnimationLabel: TypingAnimationLabel {
+final class OpeningAnimationLabel: UILabel {
     private var clearingDelay: TimeInterval = 2.0
+    private var textAnimation: TextAnimationStrategy?
     
     private let explainTextAttributes = [
         .foregroundColor: UIColor.white,
@@ -22,7 +23,9 @@ final class OpeningAnimationLabel: TypingAnimationLabel {
     ] as [NSAttributedString.Key : Any]
     
     func startAnimating() {
-        super.startTyping(text: Opening.description, attributes: explainTextAttributes, completion: {
+        let textAnimation = TypingTextAnimation(text: Opening.description, attributes: explainTextAttributes)
+        self.textAnimation = textAnimation
+        textAnimation.animate(label: self, completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + self.clearingDelay) {
                 self.attributedText = nil
                 self.startTapToStart()
@@ -31,14 +34,8 @@ final class OpeningAnimationLabel: TypingAnimationLabel {
     }
     
     private func startTapToStart() {
-        self.attributedText = NSAttributedString(string: Opening.tapToStart, attributes: tapToStartTextAttributes)
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.duration = 1.0
-        animation.fromValue = UIColor.black.cgColor
-        animation.toValue = UIColor.red.cgColor
-        animation.autoreverses = true
-        animation.repeatCount = 2
-        animation.isRemovedOnCompletion = true
-        self.layer.add(animation, forKey: nil)
+        let textAnimation = BlinkingTextAnimation(text: Opening.tapToStart, attributes: tapToStartTextAttributes)
+        self.textAnimation = textAnimation
+        textAnimation.animate(label: self, completion: {})
     }
 }
