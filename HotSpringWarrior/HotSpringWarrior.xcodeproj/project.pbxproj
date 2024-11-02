@@ -23,6 +23,7 @@
 		341A921A2CD5F7950040C3CA /* TextAnimationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */; };
 		341A921C2CD5F7FE0040C3CA /* TypingTextAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */; };
 		341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */; };
+		341A92202CD6121C0040C3CA /* BadgeAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921F2CD612100040C3CA /* BadgeAnnotation.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -72,6 +73,7 @@
 		341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnimationStrategy.swift; sourceTree = "<group>"; };
 		341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingTextAnimation.swift; sourceTree = "<group>"; };
 		341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkingTextAnimation.swift; sourceTree = "<group>"; };
+		341A921F2CD612100040C3CA /* BadgeAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeAnnotation.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 		9D6F27412C89FF3E00A5B97C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				341A921F2CD612100040C3CA /* BadgeAnnotation.swift */,
 				341A921D2CD60BE70040C3CA /* BlinkingTextAnimation.swift */,
 				341A921B2CD5F7F00040C3CA /* TypingTextAnimation.swift */,
 				341A92192CD5F78E0040C3CA /* TextAnimationStrategy.swift */,
@@ -418,6 +421,7 @@
 				341A91F52CD3AAA30040C3CA /* Animation.swift in Sources */,
 				341A92032CD3C53E0040C3CA /* RealLocationService.swift in Sources */,
 				9D6F27432C8A0D4100A5B97C /* OpeningAnimationLabel.swift in Sources */,
+				341A92202CD6121C0040C3CA /* BadgeAnnotation.swift in Sources */,
 				341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */,
 				341A92122CD5CF740040C3CA /* Game.swift in Sources */,
 				341A91F72CD3AEC90040C3CA /* HoldHotWaterAnimation.swift in Sources */,

@@ -10,6 +10,7 @@ import MapKit
 protocol Area {
     var name: String { get }
     var boundary: [CLLocation] { get }
+    var eventSpots: [PointAnnotation] { get }
 }
 
 extension Area {

@@ -85,6 +85,14 @@ class GameViewController: UIViewController {
             mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
         ])
         
+        mapView.register(MKAnnotationView.self, forAnnotationViewWithReuseIdentifier: "eventAnnnotation")
+        mapView.register(UserView.self, forAnnotationViewWithReuseIdentifier: "user")
+        
+//        イベントスポットの登録
+        eventArea.eventSpots.forEach({
+            mapView.addAnnotation($0)
+        })
+        
         drawEventArea()
     }
     
@@ -145,7 +153,12 @@ extension GameViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
-            return UserView(annotation: annotation, reuseIdentifier: "User")
+            return mapView.dequeueReusableAnnotationView(withIdentifier: "user", for: annotation)
+        } else if let badgeAnnotation = annotation as? PointAnnotation {
+            let badgeAnnotaionView =  mapView.dequeueReusableAnnotationView(withIdentifier: "eventAnnnotation", for: annotation)
+            badgeAnnotaionView.image = UIImage(named: badgeAnnotation.identifier)
+            badgeAnnotaionView.bounds.size = CGSize(width: 60, height: 60)
+            return badgeAnnotaionView
         }
         return nil
     }
