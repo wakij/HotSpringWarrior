@@ -11,20 +11,18 @@ import MapKit
 import AVFoundation
 
 class GameViewController: UIViewController {
-    @ViewLoading var mapView: MKMapView
-    
     let eventArea: Area = OtaArea()
-    
+    //前の軌跡を消すために保持しておく
     var userTrajectoryLine: MKPolyline?
-    
     private var locationService: LocationService = RealLocationService()
-    
     private var qrReader: QRReader = .init()
     private var qrScanningView: UIView?
     
+    @ViewLoading var mapView: MKMapView
     @ViewLoading private var noticeLabel: NoticeLabel
     @ViewLoading private var progressBar: ProgressBar
-    @ViewLoading private var overlayView: UIView
+    @ViewLoading private var gameCompleteBgView: UIView
+    @ViewLoading private var reportButton: UIButton
     
     override func viewDidLoad() {
         
@@ -37,7 +35,8 @@ class GameViewController: UIViewController {
         setUpMapView()
         setUpQRReaderLauncherView()
         setUpProgressBar()
-        setUpOverlayView()
+        setUpButton()
+        setUpGameCompleteBgView()
         setUpNoticeLabel()
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -54,8 +53,6 @@ class GameViewController: UIViewController {
         mapView.addOverlay(boundaryPolygon)
     }
     
-//    差分更新の方がいいのかなぁ
-//    userLocationsを形状があまり変化しないように間引く処理とかも追加したい
     private func updateUserPath() {
         if locationService.userTrajectory.count < 2 { return }
         //        前の軌跡は消去する
@@ -67,28 +64,27 @@ class GameViewController: UIViewController {
         mapView.addOverlay(userTrajectoryLine!)
     }
     
-    private func setUpOverlayView() {
-        overlayView = UIView(frame: self.view.frame)
-        overlayView.isUserInteractionEnabled = false
-        overlayView.backgroundColor = .clear
-        overlayView.alpha = 0.0
-        self.view.addSubview(overlayView)
+    private func setUpGameCompleteBgView() {
+        gameCompleteBgView = UIView(frame: self.view.frame)
+        gameCompleteBgView.isUserInteractionEnabled = false
+        gameCompleteBgView.backgroundColor = .clear
+        gameCompleteBgView.alpha = 0.0
+        self.view.addSubview(gameCompleteBgView)
         
+//        お湯の湯気感をグラデーションで表現
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
 
         gradientLayer.colors = [
-            UIColor.white.withAlphaComponent(0.1).cgColor, // 湯気の表現
+            UIColor.white.withAlphaComponent(0.1).cgColor,
             UIColor.white.withAlphaComponent(1.0).cgColor,
             UIColor.white.withAlphaComponent(0.8).cgColor,
-            UIColor(red: 0.2, green: 0.5, blue: 0.8, alpha: 1.0).cgColor, // 暖かみのある青
+            UIColor(red: 0.2, green: 0.5, blue: 0.8, alpha: 1.0).cgColor,
         ]
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientLayer.locations = [0.0, 0.5, 0.7, 1.0]
-        
-        // レイヤーをビューに追加
-        overlayView.layer.addSublayer(gradientLayer)
+        gameCompleteBgView.layer.addSublayer(gradientLayer)
     }
     
     private func setUpMapView() {
@@ -159,6 +155,15 @@ class GameViewController: UIViewController {
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(progressBar)
         
+        NSLayoutConstraint.activate([
+            progressBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 80),
+            progressBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            progressBar.widthAnchor.constraint(equalToConstant: 200),
+            progressBar.heightAnchor.constraint(equalToConstant: 20),
+        ])
+    }
+    
+    private func setUpButton() {
         var configuration = UIButton.Configuration.filled()
         configuration.title = "報告"
         configuration.baseBackgroundColor = .white
@@ -167,17 +172,13 @@ class GameViewController: UIViewController {
         configuration.image = UIImage(named: "hotSpring")?.withTintColor(.red)
         configuration.imagePadding = 10
         configuration.imagePlacement = .leading
-        let reportButton = UIButton(configuration: configuration)
+        self.reportButton = UIButton(configuration: configuration)
         reportButton.addTarget(self, action: #selector(didTapReportButton), for: .touchUpInside)
         reportButton.translatesAutoresizingMaskIntoConstraints = false
         reportButton.imageView?.contentMode = .scaleAspectFit
         self.view.addSubview(reportButton)
         
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 80),
-            progressBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            progressBar.widthAnchor.constraint(equalToConstant: 200),
-            progressBar.heightAnchor.constraint(equalToConstant: 20),
             reportButton.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor),
             reportButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
         ])
@@ -185,10 +186,9 @@ class GameViewController: UIViewController {
     
     @objc func didTapReportButton() {
         UIView.animate(withDuration: 1.0, animations: {
-            self.overlayView.alpha = 0.8
+            self.gameCompleteBgView.alpha = 0.8
         }, completion: {_ in
-            self.noticeLabel.show(text: "清掃終了")
-//            self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress))
+            self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress), isClearText: false)
         })
     }
     
@@ -365,7 +365,6 @@ extension GameViewController: MKMapViewDelegate {
 
 extension GameViewController: QRReaderDelegate {
     func didRead(_ text: String) {
-        print(text)
         stopQRReader()
         
 //       実際はゲームの状態によって分岐する
@@ -373,7 +372,7 @@ extension GameViewController: QRReaderDelegate {
         DispatchQueue.main.async {
             guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
             userView.holdHotWater {
-                self.noticeLabel.show(text: Game.getHotWater)
+                self.noticeLabel.show(text: Game.getHotWater, isClearText: true)
                 userView.startWalkingAnimation()
             }
         }
