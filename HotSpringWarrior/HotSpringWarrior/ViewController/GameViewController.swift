@@ -89,8 +89,9 @@ class GameViewController: UIViewController {
     
     private func setUpMapView() {
         mapView = MKMapView(frame: .zero)
-        mapView.showsUserLocation = true
         mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.showsCompass = false
         mapView.setRegion(.init(eventArea.boundingRect), animated: true)
 //        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
 ////        200は適当に付けてるだけ
@@ -187,6 +188,7 @@ class GameViewController: UIViewController {
     @objc func didTapReportButton() {
         UIView.animate(withDuration: 1.0, animations: {
             self.gameCompleteBgView.alpha = 0.8
+            self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
         }, completion: {_ in
             self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress), isClearText: false)
         })
