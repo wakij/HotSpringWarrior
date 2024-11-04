@@ -41,6 +41,10 @@ class ProgressBar: UIView {
         // 背景のバーの設定
         backgroundBar.backgroundColor = .white
         backgroundBar.layer.cornerRadius = 10
+        backgroundBar.layer.shadowColor = UIColor.black.cgColor
+        backgroundBar.layer.shadowOpacity = 1 //影の色の透明度
+        backgroundBar.layer.shadowRadius = 3 //影のぼかし
+        backgroundBar.layer.shadowOffset = CGSize(width: 1, height: 1)
         backgroundBar.translatesAutoresizingMaskIntoConstraints = false
 
         self.addSubview(backgroundBar)

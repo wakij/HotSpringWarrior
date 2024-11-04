@@ -76,14 +76,15 @@ class GameViewController: UIViewController {
         gradientLayer.frame = view.bounds
 
         gradientLayer.colors = [
-            UIColor.white.withAlphaComponent(0.1).cgColor,
+            UIColor.black.cgColor,
+            UIColor.white.withAlphaComponent(0.4).cgColor,
             UIColor.white.withAlphaComponent(1.0).cgColor,
             UIColor.white.withAlphaComponent(0.8).cgColor,
-            UIColor(red: 0.2, green: 0.5, blue: 0.8, alpha: 1.0).cgColor,
+            UIColor(hex: "#d6e9ca")!.cgColor,
         ]
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.locations = [0.0, 0.5, 0.7, 1.0]
+        gradientLayer.locations = [0.0, 0.2, 0.5, 0.6, 1.0]
         gameCompleteBgView.layer.addSublayer(gradientLayer)
     }
     
@@ -176,7 +177,10 @@ class GameViewController: UIViewController {
         self.reportButton = UIButton(configuration: configuration)
         reportButton.addTarget(self, action: #selector(didTapReportButton), for: .touchUpInside)
         reportButton.translatesAutoresizingMaskIntoConstraints = false
-        reportButton.imageView?.contentMode = .scaleAspectFit
+        reportButton.layer.shadowColor = UIColor.black.cgColor
+        reportButton.layer.shadowOpacity = 1 //影の色の透明度
+        reportButton.layer.shadowRadius = 3 //影のぼかし
+        reportButton.layer.shadowOffset = CGSize(width: 1, height: 1) //影の方向　width、heightを負の値にすると上の方に影が表示される
         self.view.addSubview(reportButton)
         
         NSLayoutConstraint.activate([
@@ -193,7 +197,7 @@ class GameViewController: UIViewController {
                 self.gameCompleteBgView.isUserInteractionEnabled = true
                 self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
             })
-            try await self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress))
+            try await self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress * 100))
             try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
             self.dismiss(animated: true)
         }
@@ -202,7 +206,8 @@ class GameViewController: UIViewController {
     @objc func startQRReader() {
         qrReader.start()
         qrScanningView = .init(frame: self.view.frame)
-        qrScanningView?.backgroundColor = .white
+        //エミュレータでcloseボタンを視認できるよう
+        qrScanningView?.backgroundColor = .black
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: qrReader.session)
         previewLayer.frame = qrScanningView!.bounds
@@ -213,13 +218,19 @@ class GameViewController: UIViewController {
         self.view.addSubview(qrScanningView!)
         
         var cancelButtonconfig = UIButton.Configuration.plain()
-        cancelButtonconfig.image = UIImage(systemName: "xmark")
+        cancelButtonconfig.image = UIImage(systemName: "xmark")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         cancelButtonconfig.baseForegroundColor = .systemBlue
         let cancelButton = UIButton(configuration: cancelButtonconfig)
-        cancelButton.bounds.size = CGSize(width: 50, height: 50)
-        cancelButton.frame.origin = CGPoint(x: 10, y: 50)
         cancelButton.addTarget(self, action: #selector(stopQRReader), for: .touchUpInside)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         self.qrScanningView?.addSubview(cancelButton)
+        
+        NSLayoutConstraint.activate([
+            cancelButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5),
+            cancelButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            cancelButton.widthAnchor.constraint(equalToConstant: 50),
+            cancelButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
     }
     
     @objc func stopQRReader() {
