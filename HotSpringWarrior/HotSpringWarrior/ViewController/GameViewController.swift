@@ -35,7 +35,7 @@ class GameViewController: UIViewController {
         setUpMapView()
         setUpQRReaderLauncherView()
         setUpProgressBar()
-        setUpButton()
+        setUpReportButton()
         setUpGameCompleteBgView()
         setUpNoticeLabel()
         
@@ -164,7 +164,7 @@ class GameViewController: UIViewController {
         ])
     }
     
-    private func setUpButton() {
+    private func setUpReportButton() {
         var configuration = UIButton.Configuration.filled()
         configuration.title = "報告"
         configuration.baseBackgroundColor = .white
@@ -202,7 +202,7 @@ class GameViewController: UIViewController {
     @objc func startQRReader() {
         qrReader.start()
         qrScanningView = .init(frame: self.view.frame)
-        qrScanningView?.backgroundColor = .clear
+        qrScanningView?.backgroundColor = .white
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: qrReader.session)
         previewLayer.frame = qrScanningView!.bounds
@@ -211,9 +211,18 @@ class GameViewController: UIViewController {
         
         qrScanningView?.layer.addSublayer(previewLayer)
         self.view.addSubview(qrScanningView!)
+        
+        var cancelButtonconfig = UIButton.Configuration.plain()
+        cancelButtonconfig.image = UIImage(systemName: "xmark")
+        cancelButtonconfig.baseForegroundColor = .systemBlue
+        let cancelButton = UIButton(configuration: cancelButtonconfig)
+        cancelButton.bounds.size = CGSize(width: 50, height: 50)
+        cancelButton.frame.origin = CGPoint(x: 10, y: 50)
+        cancelButton.addTarget(self, action: #selector(stopQRReader), for: .touchUpInside)
+        self.qrScanningView?.addSubview(cancelButton)
     }
     
-    func stopQRReader() {
+    @objc func stopQRReader() {
         qrReader.stop()
         
         DispatchQueue.main.async {
