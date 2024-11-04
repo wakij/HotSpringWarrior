@@ -188,9 +188,15 @@ class GameViewController: UIViewController {
     @objc func didTapReportButton() {
         UIView.animate(withDuration: 1.0, animations: {
             self.gameCompleteBgView.alpha = 0.8
+//            後ろへのタッチをブロックする
+            self.gameCompleteBgView.isUserInteractionEnabled = true
             self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
         }, completion: {_ in
-            self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress), isClearText: false)
+            self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress), completion: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
+                    self.dismiss(animated: true)
+                })
+            })
         })
     }
     
@@ -374,7 +380,11 @@ extension GameViewController: QRReaderDelegate {
         DispatchQueue.main.async {
             guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
             userView.holdHotWater {
-                self.noticeLabel.show(text: Game.getHotWater, isClearText: true)
+                self.noticeLabel.show(text: Game.getHotWater, completion: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                        self.noticeLabel.isHidden = true
+                    })
+                })
                 userView.startWalkingAnimation()
             }
         }

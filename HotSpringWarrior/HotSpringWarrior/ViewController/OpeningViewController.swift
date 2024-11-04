@@ -10,6 +10,8 @@ import UIKit
 
 class OpeningViewController: UIViewController {
     
+    @ViewLoading var openingLabel: OpeningAnimationLabel
+    
     override func viewDidLoad() {
         self.view.backgroundColor = .clear
         
@@ -17,7 +19,7 @@ class OpeningViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(titleLabel)
         
-        let openingLabel = OpeningAnimationLabel(frame: .zero)
+        openingLabel = OpeningAnimationLabel(frame: .zero)
         openingLabel.numberOfLines = 0
         openingLabel.translatesAutoresizingMaskIntoConstraints = false
         openingLabel.textAlignment = .center
@@ -42,5 +44,8 @@ class OpeningViewController: UIViewController {
         let gameVc = GameViewController()
         gameVc.modalPresentationStyle = .fullScreen
         present(gameVc, animated: true)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        self.openingLabel.startAnimating()
     }
 }

@@ -19,7 +19,7 @@ final class NoticeLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func show(text: String, isClearText: Bool) {
+    func show(text: String, completion: @escaping (() -> Void)) {
         self.isHidden = false
         let strokeTextAttributes = [
             .strokeColor : UIColor.black,
@@ -29,13 +29,6 @@ final class NoticeLabel: UILabel {
             ] as [NSAttributedString.Key : Any]
         let textAnimation = TypingTextAnimation(text: text, attributes: strokeTextAttributes)
         self.textAnimation = textAnimation
-        textAnimation.animate(label: self, completion: {
-            [weak self] in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                if isClearText {
-                    self?.isHidden = true
-                }
-            })
-        })
+        textAnimation.animate(label: self, completion: completion)
     }
 }
