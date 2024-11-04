@@ -31,4 +31,12 @@ final class NoticeLabel: UILabel {
         self.textAnimation = textAnimation
         textAnimation.animate(label: self, completion: completion)
     }
+    
+    func show(text: String) async throws {
+        await withCheckedContinuation { continuation in
+            show(text: text, completion: {
+                continuation.resume()
+            })
+        }
+    }
 }
