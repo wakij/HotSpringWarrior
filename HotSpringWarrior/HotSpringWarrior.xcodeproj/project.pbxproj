@@ -26,6 +26,7 @@
 		341A92202CD6121C0040C3CA /* BadgeAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A921F2CD612100040C3CA /* BadgeAnnotation.swift */; };
 		341A922D2CD798CF0040C3CA /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A922C2CD798CC0040C3CA /* ProgressBar.swift */; };
 		341A92312CD7E42F0040C3CA /* Ex+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92302CD7E42A0040C3CA /* Ex+UIColor.swift */; };
+		341A92372CD8D20B0040C3CA /* Ex+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92362CD8D2070040C3CA /* Ex+UIView.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -78,6 +79,7 @@
 		341A921F2CD612100040C3CA /* BadgeAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeAnnotation.swift; sourceTree = "<group>"; };
 		341A922C2CD798CC0040C3CA /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		341A92302CD7E42A0040C3CA /* Ex+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ex+UIColor.swift"; sourceTree = "<group>"; };
+		341A92362CD8D2070040C3CA /* Ex+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ex+UIView.swift"; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 		9D6F274B2C8A890100A5B97C /* Ex */ = {
 			isa = PBXGroup;
 			children = (
+				341A92362CD8D2070040C3CA /* Ex+UIView.swift */,
 				341A92302CD7E42A0040C3CA /* Ex+UIColor.swift */,
 				9D6F27532C8AD92F00A5B97C /* Ex+UIImage.swift */,
 			);
@@ -431,6 +434,7 @@
 				341A92202CD6121C0040C3CA /* BadgeAnnotation.swift in Sources */,
 				341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */,
 				341A92122CD5CF740040C3CA /* Game.swift in Sources */,
+				341A92372CD8D20B0040C3CA /* Ex+UIView.swift in Sources */,
 				341A922D2CD798CF0040C3CA /* ProgressBar.swift in Sources */,
 				341A91F72CD3AEC90040C3CA /* HoldHotWaterAnimation.swift in Sources */,
 				341A92012CD3C3CF0040C3CA /* LocationService.swift in Sources */,

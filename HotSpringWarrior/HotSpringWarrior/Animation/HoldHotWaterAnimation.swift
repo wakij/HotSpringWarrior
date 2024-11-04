@@ -7,6 +7,7 @@
 import UIKit
 
 class HoldHotWaterAnimation: NSObject, Animation {
+    private var activeContinuation: CheckedContinuation<(), Never>?
     private let completion: () -> Void
     private let fromValue: CGRect
     private let toValue: CGRect
@@ -30,9 +31,17 @@ class HoldHotWaterAnimation: NSObject, Animation {
         layer.add(maskAnimation, forKey: "HoldHotWaterAnimation")
     }
     
+    func start(on layer: CALayer) async throws {
+        await withCheckedContinuation { continuation in
+            self.activeContinuation = continuation
+        }
+    }
+    
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if flag {
             completion()
+            self.activeContinuation?.resume()
+            self.activeContinuation = nil
         }
     }
 }

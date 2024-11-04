@@ -186,18 +186,17 @@ class GameViewController: UIViewController {
     }
     
     @objc func didTapReportButton() {
-        UIView.animate(withDuration: 1.0, animations: {
-            self.gameCompleteBgView.alpha = 0.8
-//            後ろへのタッチをブロックする
-            self.gameCompleteBgView.isUserInteractionEnabled = true
-            self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
-        }, completion: {_ in
-            self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress), completion: {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-                    self.dismiss(animated: true)
-                })
+        Task { @MainActor in
+            await UIView.animate(withDuration: 1.0, animations: {
+                self.gameCompleteBgView.alpha = 0.8
+    //            後ろへのタッチをブロックする
+                self.gameCompleteBgView.isUserInteractionEnabled = true
+                self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
             })
-        })
+            try await self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress))
+            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+            self.dismiss(animated: true)
+        }
     }
     
     @objc func startQRReader() {
