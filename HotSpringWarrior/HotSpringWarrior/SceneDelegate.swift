@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene as! UIWindowScene)
         
-        let openingVc = OpeningViewController()
+        let openingVc = GameViewController()
         self.window?.rootViewController = openingVc
         self.window?.makeKeyAndVisible()
     }
