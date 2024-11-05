@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-final class OpeningAnimationLabel: UILabel {
-    private var clearingDelay: TimeInterval = 2.0
+final class OpeningLabel: UILabel {
+    var clearingDelay: TimeInterval = 2.0
     private var textAnimation: TextAnimationStrategy?
     
     private let explainTextAttributes = [

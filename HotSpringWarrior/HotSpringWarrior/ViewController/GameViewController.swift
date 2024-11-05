@@ -11,10 +11,10 @@ import MapKit
 import AVFoundation
 
 class GameViewController: UIViewController {
-    let eventArea: Area = OtaArea()
+    let eventArea: Area = PiyoParkArea()
     //前の軌跡を消すために保持しておく
     var userTrajectoryLine: MKPolyline?
-    private var locationService: LocationService = RealLocationService()
+    private var locationService: LocationService = MockLocationService()
     private var qrReader: QRReader = .init()
     
     private var qrScanningView: UIView?
@@ -198,7 +198,7 @@ class GameViewController: UIViewController {
                 self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
             })
             try await self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress * 100))
-            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
             self.dismiss(animated: true)
         }
     }
@@ -243,7 +243,8 @@ class GameViewController: UIViewController {
     }
     
     func calcRatio() -> Float {
-        let maxSize: Double = 300
+        //縦横の最大
+        let maxLength: Double = 300
         
         let eventBoundary = eventArea.boundary
         let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
@@ -256,7 +257,7 @@ class GameViewController: UIViewController {
         guard let routePath = routePolylineRenderer.path else { return 0 }
         let routeMapRect = routePolyline.boundingMapRect
         
-        let ratio = min(maxSize / eventBoundaryMapRect.width, maxSize / eventBoundaryMapRect.height)
+        let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
         let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
         
         UIGraphicsBeginImageContextWithOptions(outputImageSize, false, 0.0)
