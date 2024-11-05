@@ -10,7 +10,7 @@ import UIKit
 
 class OpeningViewController: UIViewController {
     
-    @ViewLoading var openingLabel: OpeningAnimationLabel
+    @ViewLoading var openingLabel: OpeningLabel
     
     override func viewDidLoad() {
         self.view.backgroundColor = .clear
@@ -19,7 +19,7 @@ class OpeningViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(titleLabel)
         
-        openingLabel = OpeningAnimationLabel(frame: .zero)
+        openingLabel = OpeningLabel(frame: .zero)
         openingLabel.numberOfLines = 0
         openingLabel.translatesAutoresizingMaskIntoConstraints = false
         openingLabel.textAlignment = .center
