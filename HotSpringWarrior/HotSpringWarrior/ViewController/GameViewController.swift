@@ -16,8 +16,8 @@ class GameViewController: UIViewController {
     var userTrajectoryLine: MKPolyline?
     private var locationService: LocationService = RealLocationService()
     private var qrReader: QRReader = .init()
-    private var qrScanningView: UIView?
     
+    private var qrScanningView: UIView?
     @ViewLoading var mapView: MKMapView
     @ViewLoading private var noticeLabel: NoticeLabel
     @ViewLoading private var progressBar: ProgressBar
@@ -26,9 +26,8 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         
-        locationService.startUpdatingLocation()
         locationService.delegate = self
-//        QRコードリーダー
+        locationService.startUpdatingLocation()
         qrReader.delegate = self
         
 //        Viewの設定
@@ -153,7 +152,7 @@ class GameViewController: UIViewController {
     }
     
     private func setUpProgressBar() {
-        self.progressBar =  ProgressBar(frame: .zero)
+        self.progressBar = ProgressBar(frame: .zero)
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(progressBar)
         
@@ -178,9 +177,9 @@ class GameViewController: UIViewController {
         reportButton.addTarget(self, action: #selector(didTapReportButton), for: .touchUpInside)
         reportButton.translatesAutoresizingMaskIntoConstraints = false
         reportButton.layer.shadowColor = UIColor.black.cgColor
-        reportButton.layer.shadowOpacity = 1 //影の色の透明度
-        reportButton.layer.shadowRadius = 3 //影のぼかし
-        reportButton.layer.shadowOffset = CGSize(width: 1, height: 1) //影の方向　width、heightを負の値にすると上の方に影が表示される
+        reportButton.layer.shadowOpacity = 1
+        reportButton.layer.shadowRadius = 3
+        reportButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         self.view.addSubview(reportButton)
         
         NSLayoutConstraint.activate([
@@ -190,6 +189,7 @@ class GameViewController: UIViewController {
     }
     
     @objc func didTapReportButton() {
+        self.progressBar.progress = Double(calcRatio())
         Task { @MainActor in
             await UIView.animate(withDuration: 1.0, animations: {
                 self.gameCompleteBgView.alpha = 0.8
@@ -253,7 +253,7 @@ class GameViewController: UIViewController {
         
         let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
         let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        let routePath = routePolylineRenderer.path!
+        guard let routePath = routePolylineRenderer.path else { return 0 }
         let routeMapRect = routePolyline.boundingMapRect
         
         let ratio = min(maxSize / eventBoundaryMapRect.width, maxSize / eventBoundaryMapRect.height)
@@ -291,7 +291,7 @@ class GameViewController: UIViewController {
         var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
         let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
         
-        let lineWidth: CGFloat = 150 * ratio
+        let lineWidth: CGFloat = 300 * ratio
         context.setLineWidth(lineWidth)
         context.setLineCap(.round)
         context.addPath(movedRoutePath)
@@ -319,7 +319,7 @@ class GameViewController: UIViewController {
         
         let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
         let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        let routePath = routePolylineRenderer.path!
+        guard let routePath = routePolylineRenderer.path else { return nil }
         let routeMapRect = routePolyline.boundingMapRect
         
         let ratio = min(maxSize / eventBoundaryMapRect.width, maxSize / eventBoundaryMapRect.height)
@@ -344,11 +344,12 @@ class GameViewController: UIViewController {
         var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
         let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
         
-        let lineWidth: CGFloat = 150 * ratio
+        let lineWidth: CGFloat = 300 * ratio
         context.setLineWidth(lineWidth)
         context.setLineCap(.round)
         context.addPath(movedRoutePath)
-        context.setStrokeColor(UIColor.red.cgColor)
+        context.setBlendMode(.clear)
+        context.setStrokeColor(UIColor.black.cgColor)
         context.strokePath()
         // 4. UIImageを取得
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -377,7 +378,7 @@ extension GameViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let polygon = overlay as? MKPolygon {
             let polygonRenderer = MKPolygonRenderer(overlay: polygon)
-            polygonRenderer.fillColor = UIColor.black
+            polygonRenderer.fillColor = UIColor(patternImage: UIImage(named: "black")!)
             return polygonRenderer
         }
         
@@ -386,7 +387,7 @@ extension GameViewController: MKMapViewDelegate {
             return polylineRenderer
         }
         
-        fatalError()
+        return MKOverlayRenderer(overlay: overlay)
     }
 }
 
@@ -416,6 +417,7 @@ extension GameViewController: LocationServiceDelegate {
         updateUserPath()
         let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         mapView.setRegion(cr, animated: true)
+//        self.progressBar.progress = Double(calcRatio())
     }
     
     func locationService(_ service: any LocationService, didFailWithError error: any Error) {
