@@ -13,6 +13,11 @@ final class NoticeLabel: UILabel {
         self.numberOfLines = 0
         self.textAlignment = .center
         self.isHidden = true
+        
+        self.layer.shadowColor = UIColor.black.cgColor // シャドウの色を黒に設定
+        self.layer.shadowOffset = CGSize(width: 1, height: 1) // シャドウのオフセットを設定
+        self.layer.shadowOpacity = 0.7 // シャドウの不透明度を設定
+        self.layer.shadowRadius = 2.0 // シャドウの半径を設定
     }
     
     required init?(coder: NSCoder) {
@@ -22,8 +27,6 @@ final class NoticeLabel: UILabel {
     func show(text: String, completion: @escaping (() -> Void)) {
         self.isHidden = false
         let strokeTextAttributes = [
-            .strokeColor : UIColor.black,
-            .strokeWidth : -5.0,
             .foregroundColor: UIColor.white,
             .font : UIFont.boldSystemFont(ofSize: 30.0)
             ] as [NSAttributedString.Key : Any]

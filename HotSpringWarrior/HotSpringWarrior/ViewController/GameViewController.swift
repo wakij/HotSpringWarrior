@@ -14,15 +14,20 @@ class GameViewController: UIViewController {
     let eventArea: Area = PiyoParkArea()
     //前の軌跡を消すために保持しておく
     var userTrajectoryLine: MKPolyline?
-    private var locationService: LocationService = MockLocationService()
+    
+    private var locationService: LocationService = RealLocationService()
+    private var cleanProgressCalculator: CleanProgressCalculator = .init()
     private var qrReader: QRReader = .init()
     
     private var qrScanningView: UIView?
     @ViewLoading var mapView: MKMapView
     @ViewLoading private var noticeLabel: NoticeLabel
     @ViewLoading private var progressBar: ProgressBar
-    @ViewLoading private var gameCompleteBgView: UIView
+    @ViewLoading private var gameCompleteView: UIView
     @ViewLoading private var reportButton: UIButton
+    
+    let userAnnotaionIdentifier = "user"
+    let eventAnnotaionIdentifier = "eventAnnnotation"
     
     override func viewDidLoad() {
         
@@ -64,27 +69,51 @@ class GameViewController: UIViewController {
     }
     
     private func setUpGameCompleteBgView() {
-        gameCompleteBgView = UIView(frame: self.view.frame)
-        gameCompleteBgView.isUserInteractionEnabled = false
-        gameCompleteBgView.backgroundColor = .clear
-        gameCompleteBgView.alpha = 0.0
-        self.view.addSubview(gameCompleteBgView)
+        gameCompleteView = UIView(frame: self.view.frame)
+        gameCompleteView.isUserInteractionEnabled = false
+        gameCompleteView.backgroundColor = .clear
+        gameCompleteView.alpha = 0.0
+        self.view.addSubview(gameCompleteView)
         
 //        お湯の湯気感をグラデーションで表現
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
-
         gradientLayer.colors = [
-            UIColor.black.cgColor,
-            UIColor.white.withAlphaComponent(0.4).cgColor,
-            UIColor.white.withAlphaComponent(1.0).cgColor,
+            UIColor.clear.cgColor,
+            UIColor.black.withAlphaComponent(0.9).cgColor,
+            UIColor.white.withAlphaComponent(0.5).cgColor,
             UIColor.white.withAlphaComponent(0.8).cgColor,
             UIColor(hex: "#d6e9ca")!.cgColor,
         ]
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.locations = [0.0, 0.2, 0.5, 0.6, 1.0]
-        gameCompleteBgView.layer.addSublayer(gradientLayer)
+        gradientLayer.locations = [0.0, 0.5, 0.6, 0.7, 0.8]
+        gameCompleteView.layer.addSublayer(gradientLayer)
+        
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "お疲れ様でした"
+        configuration.baseBackgroundColor = UIColor(hex: "#4B2D1C")
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .capsule
+        configuration.buttonSize = .large
+        let backButton = UIButton(configuration: configuration)
+        backButton.layer.shadowColor = UIColor.black.cgColor
+        backButton.layer.shadowOpacity = 1
+        backButton.layer.shadowRadius = 3
+        backButton.layer.shadowOffset = CGSize(width: 1, height: 1)
+        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        self.gameCompleteView.addSubview(backButton)
+        
+        NSLayoutConstraint.activate([
+            backButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            backButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
+            backButton.widthAnchor.constraint(equalToConstant: 200),
+        ])
+    }
+    
+    @objc func didTapBackButton() {
+        self.dismiss(animated: true)
     }
     
     private func setUpMapView() {
@@ -92,12 +121,12 @@ class GameViewController: UIViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.showsCompass = false
-        mapView.setRegion(.init(eventArea.boundingRect), animated: true)
+        mapView.setRegion(.init(eventArea.boundingMapRect), animated: true)
 //        mapView.setCameraBoundary(.init(mapRect: eventArea.boundingRect), animated: true)
 ////        200は適当に付けてるだけ
 ////        widthやheightをmaxCenterCoordinateDistanceに設定するとAreaもう一個分だけ移動できるようになる.
 ////        今回はそこまで移動できても意味がないので半分だけ余白を持たせている。
-        mapView.setCameraZoomRange(.init(minCenterCoordinateDistance: 200,maxCenterCoordinateDistance: min(eventArea.boundingRect.width, eventArea.boundingRect.height)*0.5), animated: true)
+//        mapView.setCameraZoomRange(.init(minCenterCoordinateDistance: 200,maxCenterCoordinateDistance: min(eventArea.boundingMapRect.width, eventArea.boundingMapRect.height)*0.5), animated: true)
         mapView.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = true
@@ -110,8 +139,8 @@ class GameViewController: UIViewController {
             mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
         ])
         
-        mapView.register(MKAnnotationView.self, forAnnotationViewWithReuseIdentifier: "eventAnnnotation")
-        mapView.register(UserView.self, forAnnotationViewWithReuseIdentifier: "user")
+        mapView.register(MKAnnotationView.self, forAnnotationViewWithReuseIdentifier: eventAnnotaionIdentifier)
+        mapView.register(UserView.self, forAnnotationViewWithReuseIdentifier: userAnnotaionIdentifier)
         
 //        イベントスポットの登録
         eventArea.eventSpots.forEach({
@@ -189,17 +218,15 @@ class GameViewController: UIViewController {
     }
     
     @objc func didTapReportButton() {
-        self.progressBar.progress = Double(calcRatio())
+        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, userTrajectory: locationService.userTrajectory)
         Task { @MainActor in
             await UIView.animate(withDuration: 1.0, animations: {
-                self.gameCompleteBgView.alpha = 0.8
+                self.gameCompleteView.alpha = 1.0
     //            後ろへのタッチをブロックする
-                self.gameCompleteBgView.isUserInteractionEnabled = true
-                self.mapView.setVisibleMapRect(self.eventArea.boundingRect, animated: true)
+                self.gameCompleteView.isUserInteractionEnabled = true
+                self.mapView.setVisibleMapRect(self.eventArea.boundingMapRect, animated: true)
             })
             try await self.noticeLabel.show(text: Game.completeMessage(areaName: self.eventArea.name, percentage: self.progressBar.progress * 100))
-            try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-            self.dismiss(animated: true)
         }
     }
     
@@ -212,7 +239,7 @@ class GameViewController: UIViewController {
         let previewLayer = AVCaptureVideoPreviewLayer(session: qrReader.session)
         previewLayer.frame = qrScanningView!.bounds
         previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.connection?.videoRotationAngle = .zero
+        previewLayer.connection?.videoRotationAngle = 90
         
         qrScanningView?.layer.addSublayer(previewLayer)
         self.view.addSubview(qrScanningView!)
@@ -241,134 +268,15 @@ class GameViewController: UIViewController {
             self.qrScanningView = nil
         }
     }
-    
-    func calcRatio() -> Float {
-        //縦横の最大
-        let maxLength: Double = 300
-        
-        let eventBoundary = eventArea.boundary
-        let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
-        let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
-        let eventBoundaryPath = eventBoundaryRenderer.path!
-        let eventBoundaryMapRect = eventBoundaryPolygon.boundingMapRect
-        
-        let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
-        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        guard let routePath = routePolylineRenderer.path else { return 0 }
-        let routeMapRect = routePolyline.boundingMapRect
-        
-        let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
-        let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
-        
-        UIGraphicsBeginImageContextWithOptions(outputImageSize, false, 0.0)
-        
-        // 2. 現在のグラフィックスコンテキストを取得
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return 0
-        }
-        
-        var boundaryScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledEventBoundaryPath = eventBoundaryPath.copy(using: &boundaryScaledTransform)!
-        context.setFillColor(UIColor.black.cgColor)
-        context.addPath(scaledEventBoundaryPath)
-        context.fillPath()
-        
-        // 4. UIImageを取得
-        let boudaryImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // 5. 画像コンテキストを終了
-        UIGraphicsEndImageContext()
-        
-        UIGraphicsBeginImageContextWithOptions(outputImageSize, false, 0.0)
-        
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return 0
-        }
-        
-        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
-        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
-        
-        let lineWidth: CGFloat = 300 * ratio
-        context.setLineWidth(lineWidth)
-        context.setLineCap(.round)
-        context.addPath(movedRoutePath)
-        context.setStrokeColor(UIColor.black.cgColor)
-        context.strokePath()
-        // 4. UIImageを取得
-        let routeImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // 5. 画像コンテキストを終了
-        UIGraphicsEndImageContext()
-        
-        let boudaryImageAlphaRatio = boudaryImage!.calcAlphaRatio()
-        let routeImageAlphaRatio = routeImage!.calcAlphaRatio()
-        return routeImageAlphaRatio / boudaryImageAlphaRatio
-    }
-    
-    func debugImage() -> UIImage? {
-        let maxSize: Double = 300
-        
-        let eventBoundary = eventArea.boundary
-        let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
-        let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
-        let eventBoundaryPath = eventBoundaryRenderer.path!
-        let eventBoundaryMapRect = eventBoundaryPolygon.boundingMapRect
-        
-        let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
-        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        guard let routePath = routePolylineRenderer.path else { return nil }
-        let routeMapRect = routePolyline.boundingMapRect
-        
-        let ratio = min(maxSize / eventBoundaryMapRect.width, maxSize / eventBoundaryMapRect.height)
-        let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
-        
-        UIGraphicsBeginImageContextWithOptions(outputImageSize, false, 0.0)
-        
-        // 2. 現在のグラフィックスコンテキストを取得
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return nil
-        }
-        
-        var boundaryScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledEventBoundaryPath = eventBoundaryPath.copy(using: &boundaryScaledTransform)!
-        context.setFillColor(UIColor.black.cgColor)
-        context.addPath(scaledEventBoundaryPath)
-        context.fillPath()
-        
-        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
-        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
-        
-        let lineWidth: CGFloat = 300 * ratio
-        context.setLineWidth(lineWidth)
-        context.setLineCap(.round)
-        context.addPath(movedRoutePath)
-        context.setBlendMode(.clear)
-        context.setStrokeColor(UIColor.black.cgColor)
-        context.strokePath()
-        // 4. UIImageを取得
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // 5. 画像コンテキストを終了
-        UIGraphicsEndImageContext()
-        
-        return image
-    }
 }
 
 extension GameViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
-            return mapView.dequeueReusableAnnotationView(withIdentifier: "user", for: annotation)
+            return mapView.dequeueReusableAnnotationView(withIdentifier: userAnnotaionIdentifier, for: annotation)
         } else if let badgeAnnotation = annotation as? PointAnnotation {
-            let badgeAnnotaionView =  mapView.dequeueReusableAnnotationView(withIdentifier: "eventAnnnotation", for: annotation)
+            let badgeAnnotaionView =  mapView.dequeueReusableAnnotationView(withIdentifier: eventAnnotaionIdentifier, for: annotation)
             badgeAnnotaionView.image = UIImage(named: badgeAnnotation.identifier)
             badgeAnnotaionView.bounds.size = CGSize(width: 60, height: 60)
             return badgeAnnotaionView
@@ -418,10 +326,64 @@ extension GameViewController: LocationServiceDelegate {
         updateUserPath()
         let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         mapView.setRegion(cr, animated: true)
-//        self.progressBar.progress = Double(calcRatio())
     }
     
     func locationService(_ service: any LocationService, didFailWithError error: any Error) {
         return
+    }
+}
+
+
+extension GameViewController {
+    func debugImage() -> UIImage? {
+        let maxLength: Double = 300
+        
+        let eventBoundary = eventArea.boundary
+        let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
+        let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
+        let eventBoundaryPath = eventBoundaryRenderer.path!
+        let eventBoundaryMapRect = eventBoundaryPolygon.boundingMapRect
+        
+        let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
+        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
+        guard let routePath = routePolylineRenderer.path else { return nil }
+        let routeMapRect = routePolyline.boundingMapRect
+        
+        let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
+        let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
+        
+        UIGraphicsBeginImageContextWithOptions(outputImageSize, false, 0.0)
+        
+        // 2. 現在のグラフィックスコンテキストを取得
+        guard let context = UIGraphicsGetCurrentContext() else {
+            UIGraphicsEndImageContext()
+            return nil
+        }
+        
+        var boundaryScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+        let scaledEventBoundaryPath = eventBoundaryPath.copy(using: &boundaryScaledTransform)!
+        context.setFillColor(UIColor.black.cgColor)
+        context.addPath(scaledEventBoundaryPath)
+        context.fillPath()
+        
+        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
+        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
+        
+        let lineWidth: CGFloat = Game.lineLength * ratio
+        context.setLineWidth(lineWidth)
+        context.setLineCap(.round)
+        context.addPath(movedRoutePath)
+        context.setBlendMode(.clear)
+        context.setStrokeColor(UIColor.black.cgColor)
+        context.strokePath()
+        // 4. UIImageを取得
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // 5. 画像コンテキストを終了
+        UIGraphicsEndImageContext()
+        
+        return image
     }
 }
