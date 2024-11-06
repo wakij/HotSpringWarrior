@@ -16,9 +16,7 @@ final class QRReader: NSObject {
     
     let session = AVCaptureSession()
     private let sessionQueue = DispatchQueue(label: "sessionQueue")
-    
     private var videoDeviceInput: AVCaptureDeviceInput!
-    
     private let metadataOutput = AVCaptureMetadataOutput()
     private let metadataObjectQueue = DispatchQueue(label: "metadataObjectQueue")
     
@@ -71,7 +69,6 @@ final class QRReader: NSObject {
     }
     
     func stop() {
-        self.metadataOutput.setMetadataObjectsDelegate(nil, queue: nil)
         sessionQueue.async {
             if self.session.isRunning {
                 self.session.stopRunning()

@@ -29,6 +29,7 @@
 		341A92372CD8D20B0040C3CA /* Ex+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A92362CD8D2070040C3CA /* Ex+UIView.swift */; };
 		341A923B2CD925110040C3CA /* piyoPark.txt in Resources */ = {isa = PBXBuildFile; fileRef = 341A923A2CD925090040C3CA /* piyoPark.txt */; };
 		341A923D2CD925440040C3CA /* PiyoParkArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A923C2CD9253A0040C3CA /* PiyoParkArea.swift */; };
+		343D818D2CDA56FC0077D6A3 /* CleanProgressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -39,7 +40,6 @@
 		9D6F27432C8A0D4100A5B97C /* OpeningLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27422C8A0D4100A5B97C /* OpeningLabel.swift */; };
 		9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27442C8A15AC00A5B97C /* TitleLabel.swift */; };
 		9D6F27472C8A857100A5B97C /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27462C8A857100A5B97C /* GameViewController.swift */; };
-		9D6F27542C8AD92F00A5B97C /* Ex+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27532C8AD92F00A5B97C /* Ex+UIImage.swift */; };
 		9D6F27562C8ADBB400A5B97C /* otaArea.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F27552C8ADBB400A5B97C /* otaArea.txt */; };
 		9D6F27592C8B29A400A5B97C /* ErasePolylineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F27582C8B29A400A5B97C /* ErasePolylineRenderer.swift */; };
 /* End PBXBuildFile section */
@@ -84,6 +84,7 @@
 		341A92362CD8D2070040C3CA /* Ex+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ex+UIView.swift"; sourceTree = "<group>"; };
 		341A923A2CD925090040C3CA /* piyoPark.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = piyoPark.txt; sourceTree = "<group>"; };
 		341A923C2CD9253A0040C3CA /* PiyoParkArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiyoParkArea.swift; sourceTree = "<group>"; };
+		343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressCalculator.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,7 +100,6 @@
 		9D6F27442C8A15AC00A5B97C /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
 		9D6F27462C8A857100A5B97C /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		9D6F27492C8A868800A5B97C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		9D6F27532C8AD92F00A5B97C /* Ex+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ex+UIImage.swift"; sourceTree = "<group>"; };
 		9D6F27552C8ADBB400A5B97C /* otaArea.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = otaArea.txt; sourceTree = "<group>"; };
 		9D6F27582C8B29A400A5B97C /* ErasePolylineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErasePolylineRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,6 +162,7 @@
 		341A91EC2CD3531A0040C3CA /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */,
 				341A92042CD3C9270040C3CA /* MockLocationService.swift */,
 				341A92022CD3C5360040C3CA /* RealLocationService.swift */,
 				341A92002CD3C3C50040C3CA /* LocationService.swift */,
@@ -274,7 +275,6 @@
 			children = (
 				341A92362CD8D2070040C3CA /* Ex+UIView.swift */,
 				341A92302CD7E42A0040C3CA /* Ex+UIColor.swift */,
-				9D6F27532C8AD92F00A5B97C /* Ex+UIImage.swift */,
 			);
 			path = Ex;
 			sourceTree = "<group>";
@@ -435,9 +435,9 @@
 				9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */,
 				341A92312CD7E42F0040C3CA /* Ex+UIColor.swift in Sources */,
 				9D6F27472C8A857100A5B97C /* GameViewController.swift in Sources */,
-				9D6F27542C8AD92F00A5B97C /* Ex+UIImage.swift in Sources */,
 				341A91F52CD3AAA30040C3CA /* Animation.swift in Sources */,
 				341A92032CD3C53E0040C3CA /* RealLocationService.swift in Sources */,
+				343D818D2CDA56FC0077D6A3 /* CleanProgressCalculator.swift in Sources */,
 				9D6F27432C8A0D4100A5B97C /* OpeningLabel.swift in Sources */,
 				341A92202CD6121C0040C3CA /* BadgeAnnotation.swift in Sources */,
 				341A921E2CD60BE80040C3CA /* BlinkingTextAnimation.swift in Sources */,

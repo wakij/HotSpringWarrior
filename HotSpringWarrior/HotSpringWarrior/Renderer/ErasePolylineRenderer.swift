@@ -11,7 +11,7 @@ import MapKit
 class ErasePolylineRenderer :  MKPolylineRenderer {
     override public func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         context.setBlendMode(.clear)
-        context.setLineWidth(150)
+        context.setLineWidth(Game.lineLength)
         context.setLineCap(.round)
         context.setStrokeColor(UIColor.black.cgColor)
         context.addPath(path)

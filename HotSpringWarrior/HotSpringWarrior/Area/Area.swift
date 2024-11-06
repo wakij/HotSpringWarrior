@@ -14,7 +14,7 @@ protocol Area {
 }
 
 extension Area {
-    var boundingRect: MKMapRect {
+    var boundingMapRect: MKMapRect {
         let boundaryPolygon = MKPolygon(coordinates: boundary.map({ $0.coordinate }), count: boundary.count)
         return boundaryPolygon.boundingMapRect
     }
