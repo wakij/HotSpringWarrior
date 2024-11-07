@@ -19,7 +19,7 @@ class CleanProgressCalculator {
 //    縦横の最大
     let maxLength: Double = 300
     
-    func calculate(targetArea: Area, userTrajectory: [CLLocation]) -> Double {
+    func calculate(targetArea: Area, userTrajectory: [CLLocation], eventCircles: [MKCircle]) -> Double {
         let eventBoundary = targetArea.boundary
         let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
         let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
@@ -72,6 +72,19 @@ class CleanProgressCalculator {
         context.addPath(movedRoutePath)
         context.setStrokeColor(UIColor.black.cgColor)
         context.strokePath()
+        
+        context.setFillColor(UIColor.green.cgColor)
+        for eventCircle in eventCircles {
+            let eventMapRect = eventCircle.boundingMapRect
+            var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+            var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+            let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
+            let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
+            let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
+            context.addPath(movedEventCirclePath)
+            context.fillPath()
+        }
+        
         // 4. UIImageを取得
         let routeImage = UIGraphicsGetImageFromCurrentImageContext()
         

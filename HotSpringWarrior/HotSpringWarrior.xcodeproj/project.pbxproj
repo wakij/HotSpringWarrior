@@ -30,6 +30,7 @@
 		341A923B2CD925110040C3CA /* piyoPark.txt in Resources */ = {isa = PBXBuildFile; fileRef = 341A923A2CD925090040C3CA /* piyoPark.txt */; };
 		341A923D2CD925440040C3CA /* PiyoParkArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341A923C2CD9253A0040C3CA /* PiyoParkArea.swift */; };
 		343D818D2CDA56FC0077D6A3 /* CleanProgressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */; };
+		343D819E2CDB5BD90077D6A3 /* EraseCircleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343D819D2CDB5BBC0077D6A3 /* EraseCircleRenderer.swift */; };
 		9D6F26F62C89FD3600A5B97C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */; };
 		9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */; };
 		9D6F26FF2C89FD3700A5B97C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D6F26FE2C89FD3700A5B97C /* Assets.xcassets */; };
@@ -85,6 +86,7 @@
 		341A923A2CD925090040C3CA /* piyoPark.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = piyoPark.txt; sourceTree = "<group>"; };
 		341A923C2CD9253A0040C3CA /* PiyoParkArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiyoParkArea.swift; sourceTree = "<group>"; };
 		343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressCalculator.swift; sourceTree = "<group>"; };
+		343D819D2CDB5BBC0077D6A3 /* EraseCircleRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseCircleRenderer.swift; sourceTree = "<group>"; };
 		9D6F26F22C89FD3600A5B97C /* HotSpringWarrior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotSpringWarrior.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D6F26F52C89FD3600A5B97C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D6F26F72C89FD3600A5B97C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -159,7 +161,7 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		341A91EC2CD3531A0040C3CA /* Util */ = {
+		341A91EC2CD3531A0040C3CA /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				343D818C2CDA55160077D6A3 /* CleanProgressCalculator.swift */,
@@ -168,7 +170,7 @@
 				341A92002CD3C3C50040C3CA /* LocationService.swift */,
 				341A91ED2CD353200040C3CA /* QRReader.swift */,
 			);
-			path = Util;
+			path = Service;
 			sourceTree = "<group>";
 		};
 		341A91F32CD3AA8C0040C3CA /* UserAnimation */ = {
@@ -205,7 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				341A91F32CD3AA8C0040C3CA /* UserAnimation */,
-				341A91EC2CD3531A0040C3CA /* Util */,
+				341A91EC2CD3531A0040C3CA /* Service */,
 				341A8EF92CC52CE30040C3CA /* Area */,
 				341A8EF42CC529FF0040C3CA /* Constant */,
 				9D6F27572C8B297A00A5B97C /* Renderer */,
@@ -282,6 +284,7 @@
 		9D6F27572C8B297A00A5B97C /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				343D819D2CDB5BBC0077D6A3 /* EraseCircleRenderer.swift */,
 				9D6F27582C8B29A400A5B97C /* ErasePolylineRenderer.swift */,
 			);
 			path = Renderer;
@@ -432,6 +435,7 @@
 				341A921A2CD5F7950040C3CA /* TextAnimationStrategy.swift in Sources */,
 				341A8EFB2CC52D0E0040C3CA /* OtaArea.swift in Sources */,
 				9D6F26F82C89FD3600A5B97C /* SceneDelegate.swift in Sources */,
+				343D819E2CDB5BD90077D6A3 /* EraseCircleRenderer.swift in Sources */,
 				9D6F27452C8A15AC00A5B97C /* TitleLabel.swift in Sources */,
 				341A92312CD7E42F0040C3CA /* Ex+UIColor.swift in Sources */,
 				9D6F27472C8A857100A5B97C /* GameViewController.swift in Sources */,
