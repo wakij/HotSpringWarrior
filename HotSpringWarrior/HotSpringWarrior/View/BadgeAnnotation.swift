@@ -6,7 +6,7 @@
 //
 import MapKit
 
-class PointAnnotation: MKPointAnnotation {
+class EventSpot: MKPointAnnotation {
     let identifier: String
     init(identifier: String, coordinate: CLLocationCoordinate2D) {
         self.identifier = identifier

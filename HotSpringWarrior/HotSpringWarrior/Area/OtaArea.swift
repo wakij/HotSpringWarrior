@@ -21,7 +21,7 @@ struct OtaArea: Area {
         fatalError("ファイルの読み込みに失敗しました")
     }()
     
-    var eventSpots: [PointAnnotation] = [
+    var eventSpots: [EventSpot] = [
         .init(identifier: "omorikaizuka", coordinate: .init(latitude: 35.59309609576951, longitude: 139.73022441785574)),
         .init(identifier: "ikegamihonmonzi", coordinate: .init(latitude: 35.57897593347053, longitude: 139.7062327879064)),
         .init(identifier: "senzokuike", coordinate: .init(latitude: 35.601683209201504, longitude: 139.69059873393968)),

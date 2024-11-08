@@ -10,12 +10,32 @@ import UIKit
 import MapKit
 import AVFoundation
 
+enum EventType {
+    case getHotWater //start
+    case visitEventSpot(EventSpot)
+    case unknown
+    
+    init(_ type: String, eventArea: Area) {
+        switch type {
+        case "getHotWater":
+            self = .getHotWater
+        case let spotIdentifier where eventArea.getEventSpot(from: spotIdentifier) != nil:
+            // `eventArea`から`spotIdentifier`に該当する`EventSpot`を取得
+            let eventSpot = eventArea.getEventSpot(from: spotIdentifier)!
+            self = .visitEventSpot(eventSpot)
+        default:
+            self = .unknown
+        }
+    }
+}
+
 class GameViewController: UIViewController {
-    let eventArea: Area = PiyoParkArea()
+    let eventArea: Area = OtaArea()
     //前の軌跡を消すために保持しておく
     var userTrajectoryLine: MKPolyline?
+    var eventCircles: [MKCircle] = []
     
-    private var locationService: LocationService = RealLocationService()
+    private var locationService: LocationService = MockLocationService()
     private var cleanProgressCalculator: CleanProgressCalculator = .init()
     private var qrReader: QRReader = .init()
     
@@ -218,7 +238,7 @@ class GameViewController: UIViewController {
     }
     
     @objc func didTapReportButton() {
-        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, userTrajectory: locationService.userTrajectory)
+        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, mapView: mapView)
         Task { @MainActor in
             await UIView.animate(withDuration: 1.0, animations: {
                 self.gameCompleteView.alpha = 1.0
@@ -268,6 +288,29 @@ class GameViewController: UIViewController {
             self.qrScanningView = nil
         }
     }
+    
+    private func hanldeEvent(event: EventType) {
+        switch event {
+        case .getHotWater:
+            DispatchQueue.main.async {
+                guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
+                userView.holdHotWater {
+                    self.noticeLabel.show(text: Game.getHotWater, completion: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                            self.noticeLabel.isHidden = true
+                        })
+                    })
+                    userView.startWalkingAnimation()
+                }
+            }
+        case .visitEventSpot(let eventSpot):
+            let circle = MKCircle(center: eventSpot.coordinate, radius: 1000)
+            mapView.addOverlay(circle)
+            eventCircles.append(circle)
+        case .unknown:
+            return
+        }
+    }
 }
 
 extension GameViewController: MKMapViewDelegate {
@@ -275,7 +318,7 @@ extension GameViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
             return mapView.dequeueReusableAnnotationView(withIdentifier: userAnnotaionIdentifier, for: annotation)
-        } else if let badgeAnnotation = annotation as? PointAnnotation {
+        } else if let badgeAnnotation = annotation as? EventSpot {
             let badgeAnnotaionView =  mapView.dequeueReusableAnnotationView(withIdentifier: eventAnnotaionIdentifier, for: annotation)
             badgeAnnotaionView.image = UIImage(named: badgeAnnotation.identifier)
             badgeAnnotaionView.bounds.size = CGSize(width: 60, height: 60)
@@ -296,6 +339,13 @@ extension GameViewController: MKMapViewDelegate {
             return polylineRenderer
         }
         
+        if let circle = overlay as? MKCircle {
+            let circleRenderer = EraseCircleRenderer(circle: circle)
+            circleRenderer.blendMode = .clear
+            circleRenderer.fillColor = .black
+            return circleRenderer
+        }
+        
         return MKOverlayRenderer(overlay: overlay)
     }
 }
@@ -303,20 +353,8 @@ extension GameViewController: MKMapViewDelegate {
 extension GameViewController: QRReaderDelegate {
     func didRead(_ text: String) {
         stopQRReader()
-        
-//       実際はゲームの状態によって分岐する
-//        今は例としてお湯を手に入れたとする
-        DispatchQueue.main.async {
-            guard let userView = self.mapView.view(for: self.mapView.userLocation), let userView = userView as? UserView else { return }
-            userView.holdHotWater {
-                self.noticeLabel.show(text: Game.getHotWater, completion: {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                        self.noticeLabel.isHidden = true
-                    })
-                })
-                userView.startWalkingAnimation()
-            }
-        }
+        let eventType = EventType(text, eventArea: eventArea)
+        hanldeEvent(event: eventType)
     }
 }
 
@@ -335,19 +373,14 @@ extension GameViewController: LocationServiceDelegate {
 
 
 extension GameViewController {
-    func debugImage() -> UIImage? {
+    func debugCleanStatus() {
         let maxLength: Double = 300
-        
+
         let eventBoundary = eventArea.boundary
         let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
         let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
         let eventBoundaryPath = eventBoundaryRenderer.path!
         let eventBoundaryMapRect = eventBoundaryPolygon.boundingMapRect
-        
-        let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
-        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        guard let routePath = routePolylineRenderer.path else { return nil }
-        let routeMapRect = routePolyline.boundingMapRect
         
         let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
         let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
@@ -357,7 +390,7 @@ extension GameViewController {
         // 2. 現在のグラフィックスコンテキストを取得
         guard let context = UIGraphicsGetCurrentContext() else {
             UIGraphicsEndImageContext()
-            return nil
+            return
         }
         
         var boundaryScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
@@ -366,24 +399,48 @@ extension GameViewController {
         context.addPath(scaledEventBoundaryPath)
         context.fillPath()
         
-        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
-        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
+        mapView.overlays.forEach({
+            if let circleOverlay = $0 as? MKCircle {
+                let eventCircle = circleOverlay
+                context.setBlendMode(.clear)
+                context.setFillColor(UIColor.green.cgColor)
+                let eventMapRect = eventCircle.boundingMapRect
+                var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
+                let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
+                let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
+                context.addPath(movedEventCirclePath)
+                context.fillPath()
+            } else if let polylineOverlay = $0 as? MKPolyline {
+                let routePolyline = polylineOverlay
+                let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
+                guard let routePath = routePolylineRenderer.path else { return }
+                let routeMapRect = routePolyline.boundingMapRect
+                
+                var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
+                var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
+                
+                let lineWidth: CGFloat = Game.lineLength * ratio
+                context.setLineWidth(lineWidth)
+                context.setLineCap(.round)
+                context.addPath(movedRoutePath)
+                context.setBlendMode(.clear)
+                context.setStrokeColor(UIColor.black.cgColor)
+                context.strokePath()
+            }
+        })
         
-        let lineWidth: CGFloat = Game.lineLength * ratio
-        context.setLineWidth(lineWidth)
-        context.setLineCap(.round)
-        context.addPath(movedRoutePath)
-        context.setBlendMode(.clear)
-        context.setStrokeColor(UIColor.black.cgColor)
-        context.strokePath()
         // 4. UIImageを取得
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
         // 5. 画像コンテキストを終了
         UIGraphicsEndImageContext()
         
-        return image
+        let imageView = UIImageView(image: image)
+        imageView.center = self.view.center
+        self.view.addSubview(imageView)
     }
 }

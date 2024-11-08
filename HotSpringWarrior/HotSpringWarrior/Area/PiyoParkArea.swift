@@ -21,5 +21,5 @@ struct PiyoParkArea: Area {
         fatalError("ファイルの読み込みに失敗しました")
     }()
     
-    var eventSpots: [PointAnnotation] = []
+    var eventSpots: [EventSpot] = []
 }
