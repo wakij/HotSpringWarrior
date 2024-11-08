@@ -238,7 +238,7 @@ class GameViewController: UIViewController {
     }
     
     @objc func didTapReportButton() {
-        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, userTrajectory: locationService.userTrajectory, eventCircles: eventCircles)
+        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, mapView: mapView)
         Task { @MainActor in
             await UIView.animate(withDuration: 1.0, animations: {
                 self.gameCompleteView.alpha = 1.0
@@ -304,7 +304,7 @@ class GameViewController: UIViewController {
                 }
             }
         case .visitEventSpot(let eventSpot):
-            let circle = MKCircle(center: eventSpot.coordinate, radius: 100)
+            let circle = MKCircle(center: eventSpot.coordinate, radius: 1000)
             mapView.addOverlay(circle)
             eventCircles.append(circle)
         case .unknown:
@@ -375,17 +375,12 @@ extension GameViewController: LocationServiceDelegate {
 extension GameViewController {
     func debugCleanStatus() {
         let maxLength: Double = 300
-        
+
         let eventBoundary = eventArea.boundary
         let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
         let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
         let eventBoundaryPath = eventBoundaryRenderer.path!
         let eventBoundaryMapRect = eventBoundaryPolygon.boundingMapRect
-        
-        let routePolyline = MKPolyline(coordinates: locationService.userTrajectory.map({ $0.coordinate }), count: locationService.userTrajectory.count)
-        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        guard let routePath = routePolylineRenderer.path else { return }
-        let routeMapRect = routePolyline.boundingMapRect
         
         let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
         let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
@@ -404,30 +399,39 @@ extension GameViewController {
         context.addPath(scaledEventBoundaryPath)
         context.fillPath()
         
-        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
-        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
-        
-        let lineWidth: CGFloat = Game.lineLength * ratio
-        context.setLineWidth(lineWidth)
-        context.setLineCap(.round)
-        context.addPath(movedRoutePath)
-        context.setBlendMode(.clear)
-        context.setStrokeColor(UIColor.black.cgColor)
-        context.strokePath()
-        
-        context.setFillColor(UIColor.green.cgColor)
-        for eventCircle in eventCircles {
-            let eventMapRect = eventCircle.boundingMapRect
-            var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-            var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-            let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
-            let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
-            let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
-            context.addPath(movedEventCirclePath)
-            context.fillPath()
-        }
+        mapView.overlays.forEach({
+            if let circleOverlay = $0 as? MKCircle {
+                let eventCircle = circleOverlay
+                context.setBlendMode(.clear)
+                context.setFillColor(UIColor.green.cgColor)
+                let eventMapRect = eventCircle.boundingMapRect
+                var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
+                let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
+                let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
+                context.addPath(movedEventCirclePath)
+                context.fillPath()
+            } else if let polylineOverlay = $0 as? MKPolyline {
+                let routePolyline = polylineOverlay
+                let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
+                guard let routePath = routePolylineRenderer.path else { return }
+                let routeMapRect = routePolyline.boundingMapRect
+                
+                var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
+                var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
+                
+                let lineWidth: CGFloat = Game.lineLength * ratio
+                context.setLineWidth(lineWidth)
+                context.setLineCap(.round)
+                context.addPath(movedRoutePath)
+                context.setBlendMode(.clear)
+                context.setStrokeColor(UIColor.black.cgColor)
+                context.strokePath()
+            }
+        })
         
         // 4. UIImageを取得
         let image = UIGraphicsGetImageFromCurrentImageContext()

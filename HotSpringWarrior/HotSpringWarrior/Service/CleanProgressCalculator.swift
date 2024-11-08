@@ -19,17 +19,12 @@ class CleanProgressCalculator {
 //    縦横の最大
     let maxLength: Double = 300
     
-    func calculate(targetArea: Area, userTrajectory: [CLLocation], eventCircles: [MKCircle]) -> Double {
+    func calculate(targetArea: Area, mapView: MKMapView) -> Double {
         let eventBoundary = targetArea.boundary
         let eventBoundaryPolygon = MKPolygon(coordinates: eventBoundary.map({ $0.coordinate }), count: eventBoundary.count)
         let eventBoundaryRenderer = MKPolygonRenderer(polygon: eventBoundaryPolygon)
         let eventBoundaryPath = eventBoundaryRenderer.path!
         let eventBoundaryMapRect = targetArea.boundingMapRect
-        
-        let routePolyline = MKPolyline(coordinates: userTrajectory.map({ $0.coordinate }), count: userTrajectory.count)
-        let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
-        guard let routePath = routePolylineRenderer.path else { return 0 }
-        let routeMapRect = routePolyline.boundingMapRect
         
         let ratio = min(maxLength / eventBoundaryMapRect.width, maxLength / eventBoundaryMapRect.height)
         let outputImageSize = CGSize(width: eventBoundaryMapRect.width * ratio, height: eventBoundaryMapRect.height * ratio)
@@ -61,30 +56,34 @@ class CleanProgressCalculator {
             return 0
         }
         
-        var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-        let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
-        var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-        let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
-        
-        let lineWidth: CGFloat = Game.lineLength * ratio
-        context.setLineWidth(lineWidth)
-        context.setLineCap(.round)
-        context.addPath(movedRoutePath)
-        context.setStrokeColor(UIColor.black.cgColor)
-        context.strokePath()
-        
-        context.setFillColor(UIColor.green.cgColor)
-        for eventCircle in eventCircles {
-            let eventMapRect = eventCircle.boundingMapRect
-            var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
-            var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
-            let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
-            let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
-            let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
-            context.addPath(movedEventCirclePath)
-            context.fillPath()
-        }
-        
+        mapView.overlays.forEach({
+            if let eventCircle = $0 as? MKCircle {
+                let eventMapRect = eventCircle.boundingMapRect
+                var eventScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                var eventMovedTransform = CGAffineTransform(translationX: (eventMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (eventMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let eventCircleRenderer = MKCircleRenderer(circle: eventCircle)
+                let scaledEventCirclePath = eventCircleRenderer.path.copy(using: &eventScaledTransform)!
+                let movedEventCirclePath = scaledEventCirclePath.copy(using: &eventMovedTransform)!
+                context.setFillColor(UIColor.black.cgColor)
+                context.addPath(movedEventCirclePath)
+                context.fillPath()
+            } else if let routePolyline = $0 as? MKPolyline {
+                let routePolylineRenderer = ErasePolylineRenderer(polyline: routePolyline)
+                let routePath = routePolylineRenderer.path!
+                let routeMapRect = routePolyline.boundingMapRect
+                var routeScaledTransform = CGAffineTransform(scaleX: ratio, y: ratio)
+                let scaledRoutePath = routePath.copy(using: &routeScaledTransform)!
+                var routeMoveTransform = CGAffineTransform(translationX: (routeMapRect.origin.x - eventBoundaryMapRect.origin.x)*ratio, y: (routeMapRect.origin.y - eventBoundaryMapRect.origin.y)*ratio)
+                let movedRoutePath = scaledRoutePath.copy(using: &routeMoveTransform)!
+                
+                let lineWidth: CGFloat = Game.lineLength * ratio
+                context.setLineWidth(lineWidth)
+                context.setLineCap(.round)
+                context.addPath(movedRoutePath)
+                context.setStrokeColor(UIColor.black.cgColor)
+                context.strokePath()
+            }
+        })
         // 4. UIImageを取得
         let routeImage = UIGraphicsGetImageFromCurrentImageContext()
         
