@@ -7,6 +7,8 @@
 
 最優秀賞・オーディエンス賞 受賞
 
+<img src="https://github.com/user-attachments/assets/46181529-2512-4e25-b970-da25d487b7b0" width="200">
+
 ## 最小要件
 - iOS 17.6
 
