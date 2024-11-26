@@ -12,5 +12,5 @@ enum Game {
         return "\(areaName)の\(String(format: "%.1f", percentage))%を\n清掃できました！"
     }
     
-    static let lineLength: CGFloat = 150
+    static let lineLength: CGFloat = 500
 }

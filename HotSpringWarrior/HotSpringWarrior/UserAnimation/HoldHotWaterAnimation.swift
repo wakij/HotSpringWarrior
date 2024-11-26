@@ -6,7 +6,7 @@
 //
 import UIKit
 
-class HoldHotWaterAnimation: NSObject, Animation {
+class HoldHotWaterAnimation: NSObject, CAAnimationDelegate {
     private var activeContinuation: CheckedContinuation<(), Never>?
     private let completion: () -> Void
     private let fromValue: CGRect

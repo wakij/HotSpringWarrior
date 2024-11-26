@@ -30,7 +30,7 @@ enum EventType {
 }
 
 class GameViewController: UIViewController {
-    let eventArea: Area = OtaArea()
+    let eventArea: Area = PioParkArea()
     //前の軌跡を消すために保持しておく
     var userTrajectoryLine: MKPolyline?
     var eventCircles: [MKCircle] = []
@@ -283,7 +283,7 @@ class GameViewController: UIViewController {
     @objc func stopQRReader() {
         qrReader.stop()
         
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.qrScanningView?.removeFromSuperview()
             self.qrScanningView = nil
         }
@@ -364,6 +364,8 @@ extension GameViewController: LocationServiceDelegate {
         updateUserPath()
         let cr = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
         mapView.setRegion(cr, animated: true)
+//        更新
+        self.progressBar.progress = cleanProgressCalculator.calculate(targetArea: eventArea, mapView: mapView)
     }
     
     func locationService(_ service: any LocationService, didFailWithError error: any Error) {

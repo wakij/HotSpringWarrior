@@ -6,11 +6,11 @@
 //
 import MapKit
 
-struct PiyoParkArea: Area {
-    var name: String = "ピヨパーク"
+struct PioParkArea: Area {
+    var name: String = "ピオパーク"
     
     var boundary: [CLLocation] = {
-        if let filePath = Bundle.main.path(forResource: "piyoPark", ofType: "txt") {
+        if let filePath = Bundle.main.path(forResource: "pioPark", ofType: "txt") {
             do {
                 let fileContents = try String(contentsOfFile: filePath, encoding: .utf8)
                 return AreaCSVLoader.loadCSV(data: fileContents)
